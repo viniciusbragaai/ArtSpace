@@ -24,7 +24,10 @@ export function Header() {
             <img 
               src={artspaceLogo} 
               alt="ArtSpace" 
-              className="h-10 md:h-12 w-auto"
+              className="h-10 md:h-12 w-auto animate-pulse-neon drop-shadow-[0_0_10px_hsl(var(--artist-primary))]"
+              style={{
+                filter: 'drop-shadow(0 0 7px hsl(var(--artist-primary))) drop-shadow(0 0 14px hsl(var(--artist-primary)/0.6))'
+              }}
             />
           </motion.a>
 
