@@ -1,96 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* ArtSpace Dark Theme - Default */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 240 10% 4%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 300 100% 60%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 5% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 180 100% 50%;
+    --accent-foreground: 240 10% 4%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 240 10% 20%;
+    --input: 240 10% 15%;
+    --ring: 180 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Neon Colors */
+    --neon-cyan: 180 100% 50%;
+    --neon-magenta: 300 100% 60%;
+    --neon-yellow: 50 100% 50%;
+    --neon-green: 120 100% 45%;
+    --neon-orange: 25 100% 55%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Artist Theme Variables - These change dynamically */
+    --artist-primary: 180 100% 50%;
+    --artist-secondary: 300 100% 60%;
+    --artist-bg: 240 10% 4%;
+    --artist-accent: 180 100% 50%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Glassmorphism */
+    --glass-bg: 240 10% 10% / 0.7;
+    --glass-border: 0 0% 100% / 0.1;
+    --glass-blur: 20px;
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Shadows */
+    --shadow-neon: 0 0 20px hsl(var(--neon-cyan) / 0.5);
+    --shadow-neon-lg: 0 0 40px hsl(var(--neon-cyan) / 0.4), 0 0 80px hsl(var(--neon-cyan) / 0.2);
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  /* Street Artist Theme */
+  .theme-street {
+    --artist-primary: 300 100% 60%;
+    --artist-secondary: 50 100% 50%;
+    --artist-bg: 270 15% 8%;
+    --artist-accent: 300 100% 60%;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  /* Classic Artist Theme */
+  .theme-classic {
+    --artist-primary: 35 30% 70%;
+    --artist-secondary: 35 40% 50%;
+    --artist-bg: 40 20% 12%;
+    --artist-accent: 35 30% 70%;
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+  /* Pop Artist Theme */
+  .theme-pop {
+    --artist-primary: 350 100% 60%;
+    --artist-secondary: 180 100% 50%;
+    --artist-bg: 350 20% 8%;
+    --artist-accent: 350 100% 60%;
+  }
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+  /* Minimal Artist Theme */
+  .theme-minimal {
+    --artist-primary: 0 0% 90%;
+    --artist-secondary: 0 0% 60%;
+    --artist-bg: 0 0% 8%;
+    --artist-accent: 0 0% 90%;
+  }
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* Neon Artist Theme */
+  .theme-neon {
+    --artist-primary: 120 100% 50%;
+    --artist-secondary: 280 100% 60%;
+    --artist-bg: 260 30% 6%;
+    --artist-accent: 120 100% 50%;
   }
 }
 
@@ -100,6 +107,217 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Glassmorphism */
+  .glass {
+    @apply backdrop-blur-xl border;
+    background: hsl(var(--glass-bg));
+    border-color: hsl(var(--glass-border));
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-2xl border;
+    background: hsl(240 10% 8% / 0.85);
+    border-color: hsl(var(--glass-border));
+  }
+
+  /* Neon Text Effects */
+  .neon-text {
+    text-shadow: 
+      0 0 7px hsl(var(--artist-primary)),
+      0 0 10px hsl(var(--artist-primary)),
+      0 0 21px hsl(var(--artist-primary)),
+      0 0 42px hsl(var(--artist-primary) / 0.8);
+  }
+
+  .neon-text-subtle {
+    text-shadow: 
+      0 0 5px hsl(var(--artist-primary) / 0.8),
+      0 0 10px hsl(var(--artist-primary) / 0.5);
+  }
+
+  /* Neon Glow Effects */
+  .neon-glow {
+    box-shadow: 
+      0 0 5px hsl(var(--artist-primary) / 0.5),
+      0 0 20px hsl(var(--artist-primary) / 0.3),
+      0 0 40px hsl(var(--artist-primary) / 0.1);
+  }
+
+  .neon-glow-strong {
+    box-shadow: 
+      0 0 10px hsl(var(--artist-primary)),
+      0 0 30px hsl(var(--artist-primary) / 0.6),
+      0 0 60px hsl(var(--artist-primary) / 0.3);
+  }
+
+  /* Neon Border */
+  .neon-border {
+    border: 1px solid hsl(var(--artist-primary) / 0.5);
+    box-shadow: 
+      inset 0 0 10px hsl(var(--artist-primary) / 0.1),
+      0 0 10px hsl(var(--artist-primary) / 0.2);
+  }
+
+  /* Card Hover Effect */
+  .card-hover {
+    @apply transition-all duration-300;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 10px 30px hsl(var(--artist-primary) / 0.2),
+      0 0 20px hsl(var(--artist-primary) / 0.1);
+  }
+
+  /* Masonry Grid */
+  .masonry-grid {
+    column-count: 1;
+    column-gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-grid {
+      column-count: 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      column-count: 3;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .masonry-grid {
+      column-count: 4;
+    }
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--artist-primary) / 0.5);
+  }
+}
+
+@layer utilities {
+  /* Gradient backgrounds */
+  .gradient-artist {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--artist-bg)) 0%,
+      hsl(var(--artist-primary) / 0.1) 50%,
+      hsl(var(--artist-bg)) 100%
+    );
+  }
+
+  .gradient-neon {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--artist-primary)) 0%,
+      hsl(var(--artist-secondary)) 100%
+    );
+  }
+
+  .text-gradient-neon {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--artist-primary)) 0%,
+      hsl(var(--artist-secondary)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Animation utilities */
+  .animate-pulse-neon {
+    animation: pulse-neon 2s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+}
+
+/* Keyframes */
+@keyframes pulse-neon {
+  0%, 100% {
+    text-shadow: 
+      0 0 7px hsl(var(--artist-primary)),
+      0 0 10px hsl(var(--artist-primary)),
+      0 0 21px hsl(var(--artist-primary)),
+      0 0 42px hsl(var(--artist-primary) / 0.8);
+  }
+  50% {
+    text-shadow: 
+      0 0 4px hsl(var(--artist-primary) / 0.8),
+      0 0 7px hsl(var(--artist-primary) / 0.6),
+      0 0 14px hsl(var(--artist-primary) / 0.4),
+      0 0 28px hsl(var(--artist-primary) / 0.2);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 
+      0 0 5px hsl(var(--artist-primary) / 0.5),
+      0 0 20px hsl(var(--artist-primary) / 0.3);
+  }
+  to {
+    box-shadow: 
+      0 0 10px hsl(var(--artist-primary)),
+      0 0 40px hsl(var(--artist-primary) / 0.5);
+  }
+}
+
+@keyframes slide-infinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }

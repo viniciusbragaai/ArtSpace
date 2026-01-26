@@ -1,13 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { motion } from 'framer-motion';
+import { ArtistThemeProvider } from '@/contexts/ArtistThemeContext';
+import { Header } from '@/components/Header';
+import { HeroSection } from '@/components/HeroSection';
+import { ArtistSlider } from '@/components/ArtistSlider';
+import { ProductGrid } from '@/components/ProductGrid';
+import { ArtNews } from '@/components/ArtNews';
+import { PaymentMethodsBadge } from '@/components/PaymentIcons';
+import { Footer } from '@/components/Footer';
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <ArtistThemeProvider>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="min-h-screen bg-background transition-colors duration-700"
+      >
+        <Header />
+        <main>
+          <HeroSection />
+          <ArtistSlider />
+          <ProductGrid />
+          <PaymentMethodsBadge />
+          <ArtNews />
+        </main>
+        <Footer />
+      </motion.div>
+    </ArtistThemeProvider>
   );
 };
 
