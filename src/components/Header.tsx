@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, User, X, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import artspaceLogo from '@/assets/artspace-logo.jpg';
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -20,9 +21,11 @@ export function Header() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <h1 className="text-2xl md:text-3xl font-bold neon-text animate-pulse-neon text-artist-primary tracking-tight">
-              ArtSpace
-            </h1>
+            <img 
+              src={artspaceLogo} 
+              alt="ArtSpace" 
+              className="h-10 md:h-12 w-auto"
+            />
           </motion.a>
 
           {/* Search Bar - Desktop */}
