@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, User, X, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import artspaceLogo from '@/assets/artspace-logo.jpg';
+import artspaceLogo from '@/assets/artspace-logo.png';
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -14,19 +14,28 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 glass-strong">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
+          {/* Logo with Neon Glow - Synced with Theme */}
           <motion.a
             href="/"
-            className="relative z-10"
-            whileHover={{ scale: 1.02 }}
+            className="relative z-10 group"
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <img 
+            <motion.img 
               src={artspaceLogo} 
               alt="ArtSpace" 
-              className="h-10 md:h-12 w-auto animate-pulse-neon drop-shadow-[0_0_10px_hsl(var(--artist-primary))]"
-              style={{
-                filter: 'drop-shadow(0 0 7px hsl(var(--artist-primary))) drop-shadow(0 0 14px hsl(var(--artist-primary)/0.6))'
+              className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto transition-all duration-300"
+              animate={{
+                filter: [
+                  'drop-shadow(0 0 8px hsl(var(--artist-primary))) drop-shadow(0 0 16px hsl(var(--artist-primary)/0.6)) drop-shadow(0 0 24px hsl(var(--artist-primary)/0.3))',
+                  'drop-shadow(0 0 4px hsl(var(--artist-primary)/0.8)) drop-shadow(0 0 8px hsl(var(--artist-primary)/0.4)) drop-shadow(0 0 12px hsl(var(--artist-primary)/0.2))',
+                  'drop-shadow(0 0 8px hsl(var(--artist-primary))) drop-shadow(0 0 16px hsl(var(--artist-primary)/0.6)) drop-shadow(0 0 24px hsl(var(--artist-primary)/0.3))',
+                ]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
               }}
             />
           </motion.a>
