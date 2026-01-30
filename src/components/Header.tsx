@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, User, X, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { ExchangeRateDisplay } from '@/components/ExchangeRateDisplay';
+import { useLanguage } from '@/contexts/LanguageContext';
 import artspaceLogo from '@/assets/artspace-logo.png';
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount] = useState(2);
+  const { t } = useLanguage();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-strong">
@@ -53,7 +57,7 @@ export function Header() {
                 >
                   <Input
                     type="search"
-                    placeholder="Buscar artistas, obras, produtos..."
+                    placeholder={t('header.search')}
                     className="w-full bg-muted/50 border-artist-primary/30 focus:border-artist-primary rounded-full pl-10 pr-10 h-10"
                     autoFocus
                   />
@@ -74,7 +78,7 @@ export function Header() {
                   className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
                 >
                   <Search className="w-4 h-4" />
-                  <span className="text-sm">Buscar...</span>
+                  <span className="text-sm">{t('header.searchShort')}</span>
                 </motion.button>
               )}
             </AnimatePresence>
@@ -82,12 +86,20 @@ export function Header() {
 
           {/* Right Navigation - Desktop */}
           <nav className="hidden md:flex items-center gap-2">
+            {/* Exchange Rate Display */}
+            <ExchangeRateDisplay />
+            
+            {/* Language Selector */}
+            <LanguageSelector />
+
+            <div className="w-px h-6 bg-border mx-1" />
+
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-muted">
               <User className="w-4 h-4 mr-2" />
-              Entrar
+              {t('header.login')}
             </Button>
             <Button variant="outline" size="sm" className="neon-border hover:bg-artist-primary/10 text-foreground">
-              Cadastrar
+              {t('header.register')}
             </Button>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-5 h-5" />
@@ -104,7 +116,10 @@ export function Header() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-1">
+            {/* Exchange Rate - Compact for mobile */}
+            <ExchangeRateDisplay />
+            
             <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(!isSearchOpen)}>
               <Search className="w-5 h-5" />
             </Button>
@@ -134,7 +149,7 @@ export function Header() {
               <div className="relative">
                 <Input
                   type="search"
-                  placeholder="Buscar artistas, obras..."
+                  placeholder={t('header.searchShort')}
                   className="w-full bg-muted/50 border-artist-primary/30 rounded-full pl-10 h-10"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -153,12 +168,18 @@ export function Header() {
               className="md:hidden pb-4 overflow-hidden"
             >
               <div className="flex flex-col gap-2">
+                {/* Language Selector for Mobile */}
+                <div className="flex items-center justify-between px-2 py-2">
+                  <span className="text-sm text-muted-foreground">Idioma</span>
+                  <LanguageSelector />
+                </div>
+                
                 <Button variant="ghost" className="justify-start">
                   <User className="w-4 h-4 mr-2" />
-                  Entrar
+                  {t('header.login')}
                 </Button>
                 <Button variant="outline" className="neon-border justify-start">
-                  Cadastrar
+                  {t('header.register')}
                 </Button>
               </div>
             </motion.nav>
