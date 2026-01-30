@@ -3,17 +3,38 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Frame, Coffee, Paintbrush, ShoppingBag, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useArtistTheme } from '@/contexts/ArtistThemeContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+
+// Icons for new SKUs
+const MugIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+    <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+  </svg>
+);
+
+const PenIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m12 19 7-7 3 3-7 7-3-3z" />
+    <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+    <path d="m2 2 7.586 7.586" />
+    <circle cx="11" cy="11" r="2" />
+  </svg>
+);
 
 interface Product {
   id: string;
   title: string;
   artist: string;
   image: string;
-  priceOriginal: number;
-  pricePrint: number;
+  priceOriginalUSD: number; // Base price in USD
+  pricePrintUSD: number;
+  priceMugUSD: number;
+  pricePenUSD: number;
   height: string;
   hasCustomService: boolean;
 }
@@ -24,8 +45,10 @@ const products: Product[] = [
     title: 'Cidade Neon',
     artist: 'Zephyr',
     image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=800&fit=crop',
-    priceOriginal: 4500,
-    pricePrint: 89,
+    priceOriginalUSD: 900,
+    pricePrintUSD: 18,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
     height: '400px',
     hasCustomService: true,
   },
@@ -34,8 +57,10 @@ const products: Product[] = [
     title: 'Reflexos Urbanos',
     artist: 'Zephyr',
     image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=500&fit=crop',
-    priceOriginal: 3200,
-    pricePrint: 69,
+    priceOriginalUSD: 640,
+    pricePrintUSD: 14,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
     height: '280px',
     hasCustomService: true,
   },
@@ -44,8 +69,10 @@ const products: Product[] = [
     title: 'Abstrato #42',
     artist: 'PRISM',
     image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=700&fit=crop',
-    priceOriginal: 2800,
-    pricePrint: 59,
+    priceOriginalUSD: 560,
+    pricePrintUSD: 12,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
     height: '350px',
     hasCustomService: false,
   },
@@ -54,8 +81,10 @@ const products: Product[] = [
     title: 'Geometria Infinita',
     artist: 'Kuro',
     image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=600&fit=crop',
-    priceOriginal: 5500,
-    pricePrint: 99,
+    priceOriginalUSD: 1100,
+    pricePrintUSD: 20,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
     height: '320px',
     hasCustomService: false,
   },
@@ -64,8 +93,10 @@ const products: Product[] = [
     title: 'Cores do Porto',
     artist: 'Marina Vale',
     image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=450&fit=crop',
-    priceOriginal: 6200,
-    pricePrint: 79,
+    priceOriginalUSD: 1240,
+    pricePrintUSD: 16,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
     height: '250px',
     hasCustomService: true,
   },
@@ -74,17 +105,20 @@ const products: Product[] = [
     title: 'Digital Dreams',
     artist: 'Nova',
     image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=600&h=900&fit=crop',
-    priceOriginal: 3800,
-    pricePrint: 89,
+    priceOriginalUSD: 760,
+    pricePrintUSD: 18,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
     height: '450px',
     hasCustomService: true,
   },
 ];
 
-type ProductVersion = 'original' | 'print' | 'custom';
+type ProductVersion = 'original' | 'print' | 'custom' | 'mug' | 'pen';
 
 export function ProductGrid() {
   const { currentArtist } = useArtistTheme();
+  const { t } = useLanguage();
 
   return (
     <section className="py-12 md:py-20">
@@ -96,14 +130,13 @@ export function ProductGrid() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Portfólio{' '}
+            {t('products.portfolio')}{' '}
             <span className="text-gradient-neon">
-              {currentArtist?.name || 'Artistas'}
+              {currentArtist?.name || t('products.artists')}
             </span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Explore obras únicas e exclusivas. De quadros originais a prints acessíveis,
-            ou até uma pintura personalizada no seu ambiente.
+            {t('products.explore')}
           </p>
         </motion.div>
 
@@ -129,17 +162,25 @@ export function ProductGrid() {
 function ProductCard({ product }: { product: Product }) {
   const [selectedVersion, setSelectedVersion] = useState<ProductVersion>('original');
   const [isHovered, setIsHovered] = useState(false);
+  const { convertToBRL, exchangeRate } = useCurrency();
+  const { t } = useLanguage();
 
-  const versions: { key: ProductVersion; label: string; icon: React.ReactNode; price?: number }[] = [
-    { key: 'original', label: 'Original', icon: <Frame className="w-4 h-4" />, price: product.priceOriginal },
-    { key: 'print', label: 'Print', icon: <Coffee className="w-4 h-4" />, price: product.pricePrint },
+  const versions: { key: ProductVersion; label: string; icon: React.ReactNode; priceUSD?: number }[] = [
+    { key: 'original', label: t('products.original'), icon: <Frame className="w-4 h-4" />, priceUSD: product.priceOriginalUSD },
+    { key: 'print', label: t('products.print'), icon: <Coffee className="w-4 h-4" />, priceUSD: product.pricePrintUSD },
+    { key: 'mug', label: t('products.mug'), icon: <MugIcon />, priceUSD: product.priceMugUSD },
+    { key: 'pen', label: t('products.pen'), icon: <PenIcon />, priceUSD: product.pricePenUSD },
     ...(product.hasCustomService
-      ? [{ key: 'custom' as ProductVersion, label: 'Sob Medida', icon: <Paintbrush className="w-4 h-4" /> }]
+      ? [{ key: 'custom' as ProductVersion, label: t('products.custom'), icon: <Paintbrush className="w-4 h-4" /> }]
       : []),
   ];
 
-  const currentPrice = selectedVersion === 'original' ? product.priceOriginal : 
-                       selectedVersion === 'print' ? product.pricePrint : null;
+  const currentPriceUSD = selectedVersion === 'original' ? product.priceOriginalUSD : 
+                          selectedVersion === 'print' ? product.pricePrintUSD :
+                          selectedVersion === 'mug' ? product.priceMugUSD :
+                          selectedVersion === 'pen' ? product.pricePenUSD : null;
+
+  const currentPriceBRL = currentPriceUSD ? convertToBRL(currentPriceUSD) : null;
 
   return (
     <motion.div
@@ -169,7 +210,7 @@ function ProductCard({ product }: { product: Product }) {
             >
               <Button className="w-full gradient-neon text-primary-foreground font-semibold gap-2">
                 <ShoppingBag className="w-4 h-4" />
-                Adicionar ao Carrinho
+                {t('products.addToCart')}
               </Button>
             </motion.div>
           )}
@@ -183,32 +224,35 @@ function ProductCard({ product }: { product: Product }) {
             <h3 className="font-semibold text-lg">{product.title}</h3>
             <p className="text-sm text-muted-foreground">{product.artist}</p>
           </div>
-          {currentPrice && (
+          {currentPriceUSD && currentPriceBRL && (
             <div className="text-right">
               <p className="text-artist-primary font-bold text-lg">
-                R$ {currentPrice.toLocaleString('pt-BR')}
+                R$ {currentPriceBRL.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
               <p className="text-xs text-muted-foreground">
-                {selectedVersion === 'original' ? 'Obra única' : 'Unidade'}
+                US$ {currentPriceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              </p>
+              <p className="text-[10px] text-muted-foreground/60">
+                {selectedVersion === 'original' ? t('products.uniqueWork') : t('products.unit')}
               </p>
             </div>
           )}
         </div>
 
         {/* Version Selector */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap">
           {versions.map((version) => (
             <button
               key={version.key}
               onClick={() => setSelectedVersion(version.key)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+              className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all ${
                 selectedVersion === version.key
                   ? 'bg-artist-primary text-primary-foreground neon-glow'
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
               {version.icon}
-              {version.label}
+              <span className="hidden sm:inline">{version.label}</span>
             </button>
           ))}
         </div>
@@ -223,6 +267,8 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 function CustomServiceDialog({ productTitle, artistName }: { productTitle: string; artistName: string }) {
+  const { t } = useLanguage();
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -234,54 +280,54 @@ function CustomServiceDialog({ productTitle, artistName }: { productTitle: strin
         >
           <Button variant="outline" className="w-full neon-border group">
             <Paintbrush className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
-            Solicite em seu Muro/Ambiente
+            {t('products.requestQuote')}
           </Button>
         </motion.div>
       </DialogTrigger>
       <DialogContent className="glass-strong border-artist-primary/20 max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl neon-text-subtle text-artist-primary">
-            Pintura Personalizada
+            {t('products.customPainting')}
           </DialogTitle>
           <p className="text-muted-foreground">
-            Solicite um orçamento para ter a obra "{productTitle}" de {artistName} em seu ambiente.
+            {t('products.requestQuoteDescription')} "{productTitle}" de {artistName} {t('products.inYourEnvironment')}
           </p>
         </DialogHeader>
         <form className="space-y-4 mt-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Nome</label>
-              <Input placeholder="Seu nome" className="bg-muted/50" />
+              <label className="text-sm font-medium mb-1.5 block">{t('products.name')}</label>
+              <Input placeholder={t('products.name')} className="bg-muted/50" />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Telefone</label>
+              <label className="text-sm font-medium mb-1.5 block">{t('products.phone')}</label>
               <Input placeholder="(13) 99999-9999" className="bg-muted/50" />
             </div>
           </div>
           <div>
-            <label className="text-sm font-medium mb-1.5 block">Email</label>
+            <label className="text-sm font-medium mb-1.5 block">{t('products.email')}</label>
             <Input type="email" placeholder="seu@email.com" className="bg-muted/50" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Largura (m)</label>
+              <label className="text-sm font-medium mb-1.5 block">{t('products.width')}</label>
               <Input type="number" placeholder="3.5" className="bg-muted/50" />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Altura (m)</label>
+              <label className="text-sm font-medium mb-1.5 block">{t('products.height')}</label>
               <Input type="number" placeholder="2.5" className="bg-muted/50" />
             </div>
           </div>
           <div>
-            <label className="text-sm font-medium mb-1.5 block">Descrição do Ambiente</label>
+            <label className="text-sm font-medium mb-1.5 block">{t('products.environmentDescription')}</label>
             <Textarea 
-              placeholder="Descreva o local onde deseja a pintura (interno/externo, tipo de parede, etc.)" 
+              placeholder={t('products.environmentPlaceholder')} 
               className="bg-muted/50 min-h-[100px]"
             />
           </div>
           <Button type="submit" className="w-full gradient-neon text-primary-foreground font-semibold">
             <Zap className="w-4 h-4 mr-2" />
-            Solicitar Orçamento
+            {t('products.submitQuote')}
           </Button>
         </form>
       </DialogContent>
