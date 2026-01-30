@@ -15,13 +15,13 @@ export function Header() {
   const { t } = useLanguage();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass-strong">
+    <header className="fixed top-0 left-0 right-0 z-50 glass-strong safe-area-top">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-14 md:h-20">
           {/* Logo with Neon Glow - Synced with Theme */}
           <motion.a
             href="/"
-            className="relative z-10 group"
+            className="relative z-10 group min-w-[44px] min-h-[44px] flex items-center touch-manipulation"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -45,7 +45,7 @@ export function Header() {
           </motion.a>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
+          <div className="hidden lg:flex flex-1 max-w-md mx-8">
             <AnimatePresence mode="wait">
               {isSearchOpen ? (
                 <motion.div
@@ -58,13 +58,13 @@ export function Header() {
                   <Input
                     type="search"
                     placeholder={t('header.search')}
-                    className="w-full bg-muted/50 border-artist-primary/30 focus:border-artist-primary rounded-full pl-10 pr-10 h-10"
+                    className="w-full bg-muted/50 border-artist-primary/30 focus:border-artist-primary rounded-full pl-10 pr-10 h-11"
                     autoFocus
                   />
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <button
                     onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 min-w-[44px] min-h-[44px] flex items-center justify-center"
                   >
                     <X className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors" />
                   </button>
@@ -75,7 +75,7 @@ export function Header() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsSearchOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-muted/50 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground min-h-[44px]"
                 >
                   <Search className="w-4 h-4" />
                   <span className="text-sm">{t('header.searchShort')}</span>
@@ -85,23 +85,23 @@ export function Header() {
           </div>
 
           {/* Right Navigation - Desktop */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-3">
             {/* Exchange Rate Display */}
             <ExchangeRateDisplay />
             
             {/* Language Selector */}
             <LanguageSelector />
 
-            <div className="w-px h-6 bg-border mx-1" />
+            <div className="w-px h-8 bg-border mx-1" />
 
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-muted">
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-muted min-h-[44px] px-4">
               <User className="w-4 h-4 mr-2" />
               {t('header.login')}
             </Button>
-            <Button variant="outline" size="sm" className="neon-border hover:bg-artist-primary/10 text-foreground">
+            <Button variant="outline" size="sm" className="neon-border hover:bg-artist-primary/10 text-foreground min-h-[44px] px-4">
               {t('header.register')}
             </Button>
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative min-w-[44px] min-h-[44px]">
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
                 <motion.span
@@ -115,23 +115,22 @@ export function Header() {
             </Button>
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Actions - Simplified */}
           <div className="flex md:hidden items-center gap-1">
-            {/* Exchange Rate - Compact for mobile */}
-            <ExchangeRateDisplay />
-            
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="min-w-[44px] min-h-[44px] touch-manipulation"
+            >
               <Search className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-artist-primary text-primary-foreground text-[10px] flex items-center justify-center font-medium">
-                  {cartCount}
-                </span>
-              )}
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="min-w-[44px] min-h-[44px] touch-manipulation"
+            >
               <Menu className="w-5 h-5" />
             </Button>
           </div>
@@ -150,7 +149,8 @@ export function Header() {
                 <Input
                   type="search"
                   placeholder={t('header.searchShort')}
-                  className="w-full bg-muted/50 border-artist-primary/30 rounded-full pl-10 h-10"
+                  className="w-full bg-muted/50 border-artist-primary/30 rounded-full pl-10 h-11"
+                  autoFocus
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               </div>
@@ -167,18 +167,18 @@ export function Header() {
               exit={{ height: 0, opacity: 0 }}
               className="md:hidden pb-4 overflow-hidden"
             >
-              <div className="flex flex-col gap-2">
-                {/* Language Selector for Mobile */}
-                <div className="flex items-center justify-between px-2 py-2">
-                  <span className="text-sm text-muted-foreground">Idioma</span>
+              <div className="flex flex-col gap-3">
+                {/* Exchange Rate and Language for Mobile */}
+                <div className="flex items-center justify-between gap-2 px-2 py-2">
+                  <ExchangeRateDisplay />
                   <LanguageSelector />
                 </div>
                 
-                <Button variant="ghost" className="justify-start">
-                  <User className="w-4 h-4 mr-2" />
+                <Button variant="ghost" className="justify-start min-h-[48px] touch-manipulation">
+                  <User className="w-5 h-5 mr-3" />
                   {t('header.login')}
                 </Button>
-                <Button variant="outline" className="neon-border justify-start">
+                <Button variant="outline" className="neon-border justify-start min-h-[48px] touch-manipulation">
                   {t('header.register')}
                 </Button>
               </div>

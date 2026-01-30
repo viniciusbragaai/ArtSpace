@@ -68,15 +68,16 @@ export function ArtistSlider() {
             variant="ghost"
             size="icon"
             onClick={handlePrev}
-            className="absolute left-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20"
+            className="absolute left-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20 min-w-[44px] min-h-[44px] touch-manipulation"
           >
             <ChevronLeft className="w-6 h-6" />
           </Button>
 
-          {/* Artists */}
+          {/* Artists - Horizontal scroll on mobile */}
           <div
             ref={sliderRef}
-            className="flex items-center justify-center gap-4 md:gap-8 px-12 overflow-hidden"
+            className="flex items-center justify-center gap-4 md:gap-8 px-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory md:overflow-hidden"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {artists.map((artist, index) => (
               <ArtistCard
@@ -94,7 +95,7 @@ export function ArtistSlider() {
             variant="ghost"
             size="icon"
             onClick={handleNext}
-            className="absolute right-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20"
+            className="absolute right-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20 min-w-[44px] min-h-[44px] touch-manipulation"
           >
             <ChevronRight className="w-6 h-6" />
           </Button>
@@ -108,7 +109,7 @@ export function ArtistSlider() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className="text-center mt-6 max-w-md mx-auto"
+            className="text-center mt-8 max-w-md mx-auto"
           >
             <p className="text-artist-primary font-medium mb-1">
               {currentArtist?.specialty}
@@ -125,12 +126,14 @@ export function ArtistSlider() {
             <button
               key={index}
               onClick={() => scrollToArtist(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              className={`min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation`}
+            >
+              <span className={`block transition-all duration-300 rounded-full ${
                 index === activeIndex
-                  ? 'w-6 bg-artist-primary neon-glow'
-                  : 'bg-muted hover:bg-muted-foreground'
-              }`}
-            />
+                  ? 'w-6 h-2 bg-artist-primary neon-glow'
+                  : 'w-2 h-2 bg-muted hover:bg-muted-foreground'
+              }`} />
+            </button>
           ))}
         </div>
       </div>
@@ -158,18 +161,21 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
         x: offset * 20,
       }}
       whileHover={{ scale: isActive ? 1.25 : 0.85 }}
+      whileTap={{ scale: isActive ? 1.15 : 0.75 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className={`relative flex-shrink-0 ${isActive ? 'z-10' : 'z-0'}`}
+      className={`relative flex-shrink-0 snap-center min-w-[44px] min-h-[44px] touch-manipulation ${isActive ? 'z-10' : 'z-0'}`}
     >
+      {/* Perfect Circle Container */}
       <div
-        className={`relative w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden transition-all duration-500 ${
+        className={`relative w-16 h-16 md:w-24 md:h-24 aspect-square rounded-full overflow-hidden transition-all duration-500 ${
           isActive ? 'neon-glow-strong ring-2 ring-artist-primary' : 'ring-1 ring-border'
         }`}
       >
+        {/* Image with object-cover to fill the circle */}
         <img
           src={artist.photo}
           alt={artist.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full aspect-square rounded-full object-cover"
         />
         {isActive && (
           <motion.div
