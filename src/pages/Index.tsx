@@ -9,6 +9,7 @@ import { ProductGrid } from '@/components/ProductGrid';
 import { ArtNews } from '@/components/ArtNews';
 import { PaymentMethodsBadge } from '@/components/PaymentIcons';
 import { Footer } from '@/components/Footer';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
 const Index = () => {
   return (
@@ -19,10 +20,10 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="min-h-screen bg-background transition-colors duration-700"
+            className="min-h-screen bg-background transition-colors duration-700 page-transition"
           >
             <Header />
-            <main>
+            <main className="pb-20 md:pb-0">
               <HeroSection />
               <ArtistSlider />
               <ProductGrid />
@@ -30,6 +31,7 @@ const Index = () => {
               <ArtNews />
             </main>
             <Footer />
+            <BottomNavigation />
           </motion.div>
         </ArtistThemeProvider>
       </CurrencyProvider>

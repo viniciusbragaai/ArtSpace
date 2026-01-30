@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Frame, Coffee, Paintbrush, ShoppingBag, Zap } from 'lucide-react';
+import { Frame, Coffee, Paintbrush, ShoppingBag, Zap, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { useArtistTheme } from '@/contexts/ArtistThemeContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -31,7 +33,7 @@ interface Product {
   title: string;
   artist: string;
   image: string;
-  priceOriginalUSD: number; // Base price in USD
+  priceOriginalUSD: number;
   pricePrintUSD: number;
   priceMugUSD: number;
   pricePenUSD: number;
@@ -159,13 +161,22 @@ export function ProductGrid() {
   );
 }
 
+interface VersionOption {
+  key: ProductVersion;
+  label: string;
+  icon: React.ReactNode;
+  priceUSD?: number;
+}
+
 function ProductCard({ product }: { product: Product }) {
   const [selectedVersion, setSelectedVersion] = useState<ProductVersion>('original');
   const [isHovered, setIsHovered] = useState(false);
-  const { convertToBRL, exchangeRate } = useCurrency();
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const { convertToBRL } = useCurrency();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
-  const versions: { key: ProductVersion; label: string; icon: React.ReactNode; priceUSD?: number }[] = [
+  const versions: VersionOption[] = [
     { key: 'original', label: t('products.original'), icon: <Frame className="w-4 h-4" />, priceUSD: product.priceOriginalUSD },
     { key: 'print', label: t('products.print'), icon: <Coffee className="w-4 h-4" />, priceUSD: product.pricePrintUSD },
     { key: 'mug', label: t('products.mug'), icon: <MugIcon />, priceUSD: product.priceMugUSD },
@@ -175,94 +186,157 @@ function ProductCard({ product }: { product: Product }) {
       : []),
   ];
 
-  const currentPriceUSD = selectedVersion === 'original' ? product.priceOriginalUSD : 
-                          selectedVersion === 'print' ? product.pricePrintUSD :
-                          selectedVersion === 'mug' ? product.priceMugUSD :
-                          selectedVersion === 'pen' ? product.pricePenUSD : null;
-
+  const currentVersion = versions.find(v => v.key === selectedVersion);
+  const currentPriceUSD = currentVersion?.priceUSD;
   const currentPriceBRL = currentPriceUSD ? convertToBRL(currentPriceUSD) : null;
 
-  return (
-    <motion.div
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="group relative rounded-xl overflow-hidden bg-card neon-border card-hover"
-    >
-      {/* Image */}
-      <div className="relative overflow-hidden" style={{ height: product.height }}>
-        <motion.img
-          src={product.image}
-          alt={product.title}
-          className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.05 : 1 }}
-          transition={{ duration: 0.4 }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-        
-        {/* Quick Add Button */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="absolute bottom-4 left-4 right-4"
-            >
-              <Button className="w-full gradient-neon text-primary-foreground font-semibold gap-2">
-                <ShoppingBag className="w-4 h-4" />
-                {t('products.addToCart')}
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+  const handleVersionSelect = (key: ProductVersion) => {
+    setSelectedVersion(key);
+    if (isMobile) {
+      setIsBottomSheetOpen(false);
+    }
+  };
 
-      {/* Content */}
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div>
-            <h3 className="font-semibold text-lg">{product.title}</h3>
-            <p className="text-sm text-muted-foreground">{product.artist}</p>
-          </div>
-          {currentPriceUSD && currentPriceBRL && (
-            <div className="text-right">
-              <p className="text-artist-primary font-bold text-lg">
-                R$ {currentPriceBRL.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                US$ {currentPriceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </p>
-              <p className="text-[10px] text-muted-foreground/60">
-                {selectedVersion === 'original' ? t('products.uniqueWork') : t('products.unit')}
-              </p>
-            </div>
-          )}
+  return (
+    <>
+      <motion.div
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        className="group relative rounded-xl overflow-hidden bg-card neon-border card-hover"
+      >
+        {/* Image */}
+        <div className="relative overflow-hidden" style={{ height: product.height }}>
+          <motion.img
+            src={product.image}
+            alt={product.title}
+            className="w-full h-full object-cover"
+            animate={{ scale: isHovered ? 1.05 : 1 }}
+            transition={{ duration: 0.4 }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+          
+          {/* Quick Add Button */}
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="absolute bottom-4 left-4 right-4"
+              >
+                <Button className="w-full gradient-neon text-primary-foreground font-semibold gap-2 min-h-[44px] touch-manipulation">
+                  <ShoppingBag className="w-4 h-4" />
+                  {t('products.addToCart')}
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Version Selector */}
-        <div className="flex gap-1.5 flex-wrap">
+        {/* Content */}
+        <div className="p-4">
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h3 className="font-semibold text-lg">{product.title}</h3>
+              <p className="text-sm text-muted-foreground">{product.artist}</p>
+            </div>
+            {currentPriceUSD && currentPriceBRL && (
+              <div className="text-right">
+                <p className="text-artist-primary font-bold text-lg font-mono tabular-nums">
+                  R$ {currentPriceBRL.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+                <p className="text-xs text-muted-foreground font-mono tabular-nums">
+                  US$ {currentPriceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-[10px] text-muted-foreground/60">
+                  {selectedVersion === 'original' ? t('products.uniqueWork') : t('products.unit')}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Version Selector - Desktop: inline buttons, Mobile: bottom sheet trigger */}
+          {isMobile ? (
+            <button
+              onClick={() => setIsBottomSheetOpen(true)}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-muted/50 border border-border hover:bg-muted transition-colors min-h-[48px] touch-manipulation"
+            >
+              <div className="flex items-center gap-2">
+                {currentVersion?.icon}
+                <span className="font-medium">{currentVersion?.label}</span>
+              </div>
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            </button>
+          ) : (
+            <div className="flex gap-1.5 flex-wrap">
+              {versions.map((version) => (
+                <button
+                  key={version.key}
+                  onClick={() => setSelectedVersion(version.key)}
+                  className={`flex items-center gap-1 px-3 py-2 rounded-full text-xs font-medium transition-all min-h-[36px] touch-manipulation ${
+                    selectedVersion === version.key
+                      ? 'bg-artist-primary text-primary-foreground neon-glow'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  }`}
+                >
+                  {version.icon}
+                  <span>{version.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Custom Service Form Trigger - only show on desktop or after selecting custom */}
+          {selectedVersion === 'custom' && product.hasCustomService && !isMobile && (
+            <CustomServiceDialog productTitle={product.title} artistName={product.artist} />
+          )}
+        </div>
+      </motion.div>
+
+      {/* Mobile Bottom Sheet for Version Selection */}
+      <BottomSheet
+        isOpen={isBottomSheetOpen}
+        onClose={() => setIsBottomSheetOpen(false)}
+        title="Selecione o Tipo"
+      >
+        <div className="p-4 space-y-2">
           {versions.map((version) => (
             <button
               key={version.key}
-              onClick={() => setSelectedVersion(version.key)}
-              className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all ${
+              onClick={() => handleVersionSelect(version.key)}
+              className={`w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all min-h-[56px] touch-manipulation ${
                 selectedVersion === version.key
-                  ? 'bg-artist-primary text-primary-foreground neon-glow'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  ? 'bg-artist-primary/20 border border-artist-primary text-artist-primary'
+                  : 'bg-muted/50 border border-transparent hover:bg-muted'
               }`}
             >
-              {version.icon}
-              <span className="hidden sm:inline">{version.label}</span>
+              <div className="flex items-center gap-3">
+                {version.icon}
+                <span className="font-medium">{version.label}</span>
+              </div>
+              {version.priceUSD && (
+                <div className="text-right">
+                  <p className="font-mono font-semibold tabular-nums">
+                    R$ {convertToBRL(version.priceUSD).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                  <p className="text-xs text-muted-foreground font-mono tabular-nums">
+                    US$ {version.priceUSD.toFixed(2)}
+                  </p>
+                </div>
+              )}
             </button>
           ))}
         </div>
 
-        {/* Custom Service Form Trigger */}
-        {selectedVersion === 'custom' && product.hasCustomService && (
-          <CustomServiceDialog productTitle={product.title} artistName={product.artist} />
-        )}
-      </div>
-    </motion.div>
+        {/* Add to Cart button in bottom sheet */}
+        <div className="p-4 border-t border-border">
+          <Button className="w-full gradient-neon text-primary-foreground font-semibold gap-2 min-h-[52px] touch-manipulation">
+            <ShoppingBag className="w-5 h-5" />
+            {t('products.addToCart')}
+          </Button>
+        </div>
+      </BottomSheet>
+    </>
   );
 }
 
@@ -278,13 +352,13 @@ function CustomServiceDialog({ productTitle, artistName }: { productTitle: strin
           exit={{ opacity: 0, height: 0 }}
           className="mt-4"
         >
-          <Button variant="outline" className="w-full neon-border group">
+          <Button variant="outline" className="w-full neon-border group min-h-[48px] touch-manipulation">
             <Paintbrush className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
             {t('products.requestQuote')}
           </Button>
         </motion.div>
       </DialogTrigger>
-      <DialogContent className="glass-strong border-artist-primary/20 max-w-lg">
+      <DialogContent className="glass-strong border-artist-primary/20 max-w-lg mx-4">
         <DialogHeader>
           <DialogTitle className="text-2xl neon-text-subtle text-artist-primary">
             {t('products.customPainting')}
@@ -294,28 +368,28 @@ function CustomServiceDialog({ productTitle, artistName }: { productTitle: strin
           </p>
         </DialogHeader>
         <form className="space-y-4 mt-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1.5 block">{t('products.name')}</label>
-              <Input placeholder={t('products.name')} className="bg-muted/50" />
+              <Input placeholder={t('products.name')} className="bg-muted/50 min-h-[48px]" />
             </div>
             <div>
               <label className="text-sm font-medium mb-1.5 block">{t('products.phone')}</label>
-              <Input placeholder="(13) 99999-9999" className="bg-muted/50" />
+              <Input placeholder="(13) 99999-9999" className="bg-muted/50 min-h-[48px]" />
             </div>
           </div>
           <div>
             <label className="text-sm font-medium mb-1.5 block">{t('products.email')}</label>
-            <Input type="email" placeholder="seu@email.com" className="bg-muted/50" />
+            <Input type="email" placeholder="seu@email.com" className="bg-muted/50 min-h-[48px]" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1.5 block">{t('products.width')}</label>
-              <Input type="number" placeholder="3.5" className="bg-muted/50" />
+              <Input type="number" placeholder="3.5" className="bg-muted/50 min-h-[48px]" />
             </div>
             <div>
               <label className="text-sm font-medium mb-1.5 block">{t('products.height')}</label>
-              <Input type="number" placeholder="2.5" className="bg-muted/50" />
+              <Input type="number" placeholder="2.5" className="bg-muted/50 min-h-[48px]" />
             </div>
           </div>
           <div>
@@ -325,7 +399,7 @@ function CustomServiceDialog({ productTitle, artistName }: { productTitle: strin
               className="bg-muted/50 min-h-[100px]"
             />
           </div>
-          <Button type="submit" className="w-full gradient-neon text-primary-foreground font-semibold">
+          <Button type="submit" className="w-full gradient-neon text-primary-foreground font-semibold min-h-[52px] touch-manipulation">
             <Zap className="w-4 h-4 mr-2" />
             {t('products.submitQuote')}
           </Button>
