@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface NewsItem {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   image: string;
-  date: string;
+  dateKey: string;
   location?: string;
   type: 'event' | 'news' | 'exhibition';
 }
@@ -15,48 +16,58 @@ interface NewsItem {
 const newsItems: NewsItem[] = [
   {
     id: '1',
-    title: 'Exposição Coletiva: Cores de Santos',
-    description: 'Uma celebração da arte urbana santista com 12 artistas locais transformando o centro histórico.',
+    titleKey: 'news.item1.title',
+    descriptionKey: 'news.item1.description',
     image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=600&h=400&fit=crop',
-    date: '15-30 Fev 2024',
+    dateKey: '15-30 Fev 2024',
     location: 'Centro Histórico',
     type: 'exhibition',
   },
   {
     id: '2',
-    title: 'Workshop de Graffiti com Zephyr',
-    description: 'Aprenda técnicas de spray e composição com um dos maiores nomes do graffiti brasileiro.',
+    titleKey: 'news.item2.title',
+    descriptionKey: 'news.item2.description',
     image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&h=400&fit=crop',
-    date: '22 Fev 2024',
+    dateKey: '22 Fev 2024',
     location: 'ArtSpace Studio',
     type: 'event',
   },
   {
     id: '3',
-    title: 'Nova Coleção Digital de Nova',
-    description: 'A artista lança sua primeira coleção de NFTs em parceria exclusiva com a galeria.',
+    titleKey: 'news.item3.title',
+    descriptionKey: 'news.item3.description',
     image: 'https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?w=600&h=400&fit=crop',
-    date: '01 Mar 2024',
+    dateKey: '01 Mar 2024',
     type: 'news',
   },
   {
     id: '4',
-    title: 'Mural Gigante na Orla',
-    description: 'Projeto comunitário transformará 200m² de muro em obra de arte colaborativa.',
+    titleKey: 'news.item4.title',
+    descriptionKey: 'news.item4.description',
     image: 'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=600&h=400&fit=crop',
-    date: 'Em andamento',
+    dateKey: 'news.ongoing',
     location: 'Orla de Santos',
     type: 'news',
   },
 ];
 
-const typeLabels = {
-  event: { label: 'Evento', color: 'bg-neon-cyan' },
-  news: { label: 'Notícia', color: 'bg-neon-magenta' },
-  exhibition: { label: 'Exposição', color: 'bg-neon-yellow' },
-};
-
 export function ArtNews() {
+  const { t } = useLanguage();
+
+  const typeLabels = {
+    event: { labelKey: 'news.event', color: 'bg-neon-cyan' },
+    news: { labelKey: 'news.news', color: 'bg-neon-magenta' },
+    exhibition: { labelKey: 'news.exhibition', color: 'bg-neon-yellow' },
+  };
+
+  const getDate = (dateKey: string) => {
+    // Check if it's a translation key or a literal date
+    if (dateKey.startsWith('news.')) {
+      return t(dateKey);
+    }
+    return dateKey;
+  };
+
   return (
     <section className="py-12 md:py-20 bg-card/50">
       <div className="container mx-auto px-4">
@@ -68,14 +79,14 @@ export function ArtNews() {
         >
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-2">
-              Art <span className="text-gradient-neon">News</span>
+              {t('sections.artNews').split(' ')[0]} <span className="text-gradient-neon">{t('sections.artNews').split(' ')[1] || 'News'}</span>
             </h2>
             <p className="text-muted-foreground">
-              Fique por dentro da cena artística de Santos
+              {t('sections.artNewsSubtitle')}
             </p>
           </div>
           <Button variant="ghost" className="hidden md:flex gap-2 text-artist-primary hover:text-artist-primary/80">
-            Ver todas
+            {t('sections.viewAll')}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </motion.div>
@@ -96,30 +107,30 @@ export function ArtNews() {
                 <div className="relative h-48 overflow-hidden">
                   <motion.img
                     src={item.image}
-                    alt={item.title}
+                    alt={t(item.titleKey)}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
                   
                   {/* Type Badge */}
                   <span className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold text-primary-foreground ${typeLabels[item.type].color}`}>
-                    {typeLabels[item.type].label}
+                    {t(typeLabels[item.type].labelKey)}
                   </span>
                 </div>
 
                 {/* Content */}
                 <div className="p-5">
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2 group-hover:text-artist-primary transition-colors">
-                    {item.title}
+                    {t(item.titleKey)}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                    {item.description}
+                    {t(item.descriptionKey)}
                   </p>
                   
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
-                      {item.date}
+                      {getDate(item.dateKey)}
                     </span>
                     {item.location && (
                       <span className="flex items-center gap-1">
@@ -137,7 +148,7 @@ export function ArtNews() {
         {/* Mobile See All Button */}
         <div className="flex justify-center mt-6 md:hidden">
           <Button variant="outline" className="neon-border gap-2">
-            Ver todas as notícias
+            {t('sections.viewAllNews')}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
