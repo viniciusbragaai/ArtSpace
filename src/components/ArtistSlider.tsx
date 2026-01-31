@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
 import { useArtistTheme, Artist } from '@/contexts/ArtistThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -50,16 +50,34 @@ export function ArtistSlider() {
             {t('artist.selectArtist')}
           </h2>
           <AnimatePresence mode="wait">
-            <motion.h3
+            <motion.div
               key={currentArtist?.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="text-3xl md:text-4xl font-bold neon-text-subtle text-artist-primary"
+              className="flex flex-col items-center gap-1"
             >
-              {currentArtist?.name}
-            </motion.h3>
+              <h3 className="text-3xl md:text-4xl font-bold neon-text-subtle text-artist-primary">
+                {currentArtist?.name}
+              </h3>
+              {currentArtist && (
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-artist-primary/20 text-artist-primary border border-artist-primary/30">
+                    {currentArtist.specialty}
+                  </span>
+                  <a
+                    href={currentArtist.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-artist-primary transition-colors"
+                  >
+                    <Instagram className="w-4 h-4 group-hover:drop-shadow-[0_0_8px_hsl(var(--artist-primary))] transition-all" />
+                    <span className="hidden sm:inline">{currentArtist.handle}</span>
+                  </a>
+                </div>
+              )}
+            </motion.div>
           </AnimatePresence>
         </div>
 
@@ -111,28 +129,38 @@ export function ArtistSlider() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className="text-center mt-8 max-w-md mx-auto"
+            className="text-center mt-8 max-w-lg mx-auto"
           >
-            <p className="text-artist-primary font-medium mb-1">
-              {currentArtist?.specialty}
-            </p>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
               {currentArtist?.bio}
             </p>
+            {currentArtist && (
+              <a
+                href={currentArtist.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-muted/50 hover:bg-artist-primary/20 border border-border hover:border-artist-primary/50 transition-all group"
+              >
+                <Instagram className="w-5 h-5 text-muted-foreground group-hover:text-artist-primary group-hover:drop-shadow-[0_0_10px_hsl(var(--artist-primary))] transition-all" />
+                <span className="text-sm font-medium text-muted-foreground group-hover:text-artist-primary transition-colors">
+                  {t('artist.viewProfile')}
+                </span>
+              </a>
+            )}
           </motion.div>
         </AnimatePresence>
 
         {/* Dots Indicator */}
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center gap-1 mt-6 flex-wrap max-w-xs mx-auto">
           {artists.map((_, index) => (
             <button
               key={index}
               onClick={() => scrollToArtist(index)}
-              className={`min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation`}
+              className={`min-w-[32px] min-h-[32px] flex items-center justify-center touch-manipulation`}
             >
               <span className={`block transition-all duration-300 rounded-full ${
                 index === activeIndex
-                  ? 'w-6 h-2 bg-artist-primary neon-glow'
+                  ? 'w-5 h-2 bg-artist-primary neon-glow'
                   : 'w-2 h-2 bg-muted hover:bg-muted-foreground'
               }`} />
             </button>
@@ -158,18 +186,18 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
     <motion.button
       onClick={onClick}
       animate={{
-        scale: isActive ? 1.2 : 0.8,
-        opacity: Math.abs(offset) > 2 ? 0 : isActive ? 1 : 0.5,
-        x: offset * 20,
+        scale: isActive ? 1.2 : 0.75,
+        opacity: Math.abs(offset) > 3 ? 0 : isActive ? 1 : 0.5,
+        x: offset * 15,
       }}
-      whileHover={{ scale: isActive ? 1.25 : 0.85 }}
-      whileTap={{ scale: isActive ? 1.15 : 0.75 }}
+      whileHover={{ scale: isActive ? 1.25 : 0.8 }}
+      whileTap={{ scale: isActive ? 1.15 : 0.7 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       className={`relative flex-shrink-0 snap-center min-w-[44px] min-h-[44px] touch-manipulation ${isActive ? 'z-10' : 'z-0'}`}
     >
       {/* Perfect Circle Container */}
       <div
-        className={`relative w-16 h-16 md:w-24 md:h-24 aspect-square rounded-full overflow-hidden transition-all duration-500 ${
+        className={`relative w-14 h-14 md:w-20 md:h-20 aspect-square rounded-full overflow-hidden transition-all duration-500 ${
           isActive ? 'neon-glow-strong ring-2 ring-artist-primary' : 'ring-1 ring-border'
         }`}
       >
@@ -188,12 +216,16 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
           />
         )}
       </div>
-      <motion.p
+      
+      {/* Name tooltip on active */}
+      <motion.div
         animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
-        className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium whitespace-nowrap text-artist-primary"
+        className="absolute -bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center"
       >
-        {artist.name}
-      </motion.p>
+        <p className="text-xs font-semibold whitespace-nowrap text-artist-primary">
+          {artist.name}
+        </p>
+      </motion.div>
     </motion.button>
   );
 }
