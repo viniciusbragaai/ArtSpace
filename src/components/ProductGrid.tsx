@@ -297,7 +297,7 @@ function ProductCard({ product }: { product: Product }) {
       <BottomSheet
         isOpen={isBottomSheetOpen}
         onClose={() => setIsBottomSheetOpen(false)}
-        title="Selecione o Tipo"
+        title={t('products.chooseFormat')}
       >
         <div className="p-4 space-y-2">
           {versions.map((version) => (

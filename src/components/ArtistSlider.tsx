@@ -2,10 +2,12 @@ import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useArtistTheme, Artist } from '@/contexts/ArtistThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 
 export function ArtistSlider() {
   const { artists, currentArtist, setCurrentArtist } = useArtistTheme();
+  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +47,7 @@ export function ArtistSlider() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-6">
           <h2 className="text-sm uppercase tracking-widest text-muted-foreground mb-2">
-            Selecione um Artista
+            {t('artist.selectArtist')}
           </h2>
           <AnimatePresence mode="wait">
             <motion.h3

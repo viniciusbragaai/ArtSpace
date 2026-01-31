@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Instagram, Twitter } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="py-12 md:py-16 border-t border-border bg-card/30">
       <div className="container mx-auto px-4">
@@ -15,8 +18,7 @@ export function Footer() {
               ArtSpace
             </motion.h2>
             <p className="text-muted-foreground text-sm mb-4">
-              Galeria de arte moderna e street art em Santos. 
-              Conectando artistas e colecionadores desde 2020.
+              {t('footer.description')}
             </p>
             <div className="flex gap-3">
               <a href="#" className="p-2 rounded-lg bg-muted hover:bg-artist-primary/20 transition-colors">
@@ -30,30 +32,30 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4">Navegação</h3>
+            <h3 className="font-semibold mb-4">{t('footer.navigation')}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Artistas</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Obras</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Prints & Produtos</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Eventos</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Sobre Nós</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.artists')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.artworks')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.printProducts')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.events')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.aboutUs')}</a></li>
             </ul>
           </div>
 
           {/* Services */}
           <div>
-            <h3 className="font-semibold mb-4">Serviços</h3>
+            <h3 className="font-semibold mb-4">{t('footer.services')}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Pintura Personalizada</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Consultoria de Arte</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Murais Corporativos</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">Curadoria de Eventos</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.customPainting')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.artConsulting')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.corporateMurals')}</a></li>
+              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.eventCuration')}</a></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold mb-4">Contato</h3>
+            <h3 className="font-semibold mb-4">{t('footer.contact')}</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 text-artist-primary" />
@@ -73,10 +75,10 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© 2024 ArtSpace. Todos os direitos reservados.</p>
+          <p>© 2024 ArtSpace. {t('footer.allRights')}</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">Termos de Uso</a>
-            <a href="#" className="hover:text-foreground transition-colors">Privacidade</a>
+            <a href="#" className="hover:text-foreground transition-colors">{t('footer.termsOfUse')}</a>
+            <a href="#" className="hover:text-foreground transition-colors">{t('footer.privacy')}</a>
           </div>
         </div>
       </div>
