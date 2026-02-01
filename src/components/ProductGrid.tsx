@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Frame, Coffee, Paintbrush, ShoppingBag, Zap, ChevronDown } from 'lucide-react';
+import { Frame, Coffee, Paintbrush, ShoppingBag, Zap, ChevronDown, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { useArtistTheme } from '@/contexts/ArtistThemeContext';
@@ -32,6 +32,7 @@ interface Product {
   id: string;
   title: string;
   artist: string;
+  artistId: string; // Link to artist
   image: string;
   priceOriginalUSD: number;
   pricePrintUSD: number;
@@ -39,13 +40,15 @@ interface Product {
   pricePenUSD: number;
   height: string;
   hasCustomService: boolean;
+  isFeatured?: boolean;
 }
 
 const products: Product[] = [
   {
     id: '1',
     title: 'Cidade Neon',
-    artist: 'Zephyr',
+    artist: 'A Fase',
+    artistId: '1',
     image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=800&fit=crop',
     priceOriginalUSD: 900,
     pricePrintUSD: 18,
@@ -53,11 +56,13 @@ const products: Product[] = [
     pricePenUSD: 5,
     height: '400px',
     hasCustomService: true,
+    isFeatured: true,
   },
   {
     id: '2',
     title: 'Reflexos Urbanos',
-    artist: 'Zephyr',
+    artist: 'Cadumen',
+    artistId: '2',
     image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=500&fit=crop',
     priceOriginalUSD: 640,
     pricePrintUSD: 14,
@@ -65,11 +70,13 @@ const products: Product[] = [
     pricePenUSD: 5,
     height: '280px',
     hasCustomService: true,
+    isFeatured: true,
   },
   {
     id: '3',
-    title: 'Abstrato #42',
-    artist: 'PRISM',
+    title: 'Subterrâneo',
+    artist: 'Zezão',
+    artistId: '3',
     image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=700&fit=crop',
     priceOriginalUSD: 560,
     pricePrintUSD: 12,
@@ -77,11 +84,13 @@ const products: Product[] = [
     pricePenUSD: 5,
     height: '350px',
     hasCustomService: false,
+    isFeatured: true,
   },
   {
     id: '4',
     title: 'Geometria Infinita',
-    artist: 'Kuro',
+    artist: 'Val Lehmann',
+    artistId: '4',
     image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=600&fit=crop',
     priceOriginalUSD: 1100,
     pricePrintUSD: 20,
@@ -89,11 +98,13 @@ const products: Product[] = [
     pricePenUSD: 5,
     height: '320px',
     hasCustomService: false,
+    isFeatured: true,
   },
   {
     id: '5',
     title: 'Cores do Porto',
-    artist: 'Marina Vale',
+    artist: 'Sérgio Free',
+    artistId: '5',
     image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=450&fit=crop',
     priceOriginalUSD: 1240,
     pricePrintUSD: 16,
@@ -101,11 +112,13 @@ const products: Product[] = [
     pricePenUSD: 5,
     height: '250px',
     hasCustomService: true,
+    isFeatured: true,
   },
   {
     id: '6',
-    title: 'Digital Dreams',
-    artist: 'Nova',
+    title: 'Traços da Cidade',
+    artist: 'Paulo Medo',
+    artistId: '6',
     image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=600&h=900&fit=crop',
     priceOriginalUSD: 760,
     pricePrintUSD: 18,
@@ -114,13 +127,77 @@ const products: Product[] = [
     height: '450px',
     hasCustomService: true,
   },
+  {
+    id: '7',
+    title: 'Nova Geração',
+    artist: 'Victor Gabriel',
+    artistId: '7',
+    image: 'https://images.unsplash.com/photo-1569172122301-bc5008bc09c5?w=600&h=600&fit=crop',
+    priceOriginalUSD: 480,
+    pricePrintUSD: 15,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
+    height: '320px',
+    hasCustomService: true,
+  },
+  {
+    id: '8',
+    title: 'Composição Dourada',
+    artist: 'Costa Villar',
+    artistId: '8',
+    image: 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600&h=500&fit=crop',
+    priceOriginalUSD: 1500,
+    pricePrintUSD: 25,
+    priceMugUSD: 10,
+    pricePenUSD: 6,
+    height: '280px',
+    hasCustomService: true,
+  },
+  {
+    id: '9',
+    title: 'Realidade Urbana',
+    artist: 'Dicart',
+    artistId: '9',
+    image: 'https://images.unsplash.com/photo-1573096108468-702f6014ef28?w=600&h=700&fit=crop',
+    priceOriginalUSD: 890,
+    pricePrintUSD: 20,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
+    height: '380px',
+    hasCustomService: false,
+  },
+  {
+    id: '10',
+    title: 'Street Raw',
+    artist: 'Ozill',
+    artistId: '10',
+    image: 'https://images.unsplash.com/photo-1561839561-b13bcfe95249?w=600&h=600&fit=crop',
+    priceOriginalUSD: 720,
+    pricePrintUSD: 16,
+    priceMugUSD: 8,
+    pricePenUSD: 5,
+    height: '300px',
+    hasCustomService: true,
+  },
 ];
 
 type ProductVersion = 'original' | 'print' | 'custom' | 'mug' | 'pen';
 
 export function ProductGrid() {
-  const { currentArtist } = useArtistTheme();
+  const { currentArtist, neonColor } = useArtistTheme();
   const { t } = useLanguage();
+
+  // Filter products based on selected artist
+  const filteredProducts = useMemo(() => {
+    if (!currentArtist) {
+      // Show featured products when no artist selected
+      return products.filter((p) => p.isFeatured);
+    }
+    return products.filter((p) => p.artistId === currentArtist.id);
+  }, [currentArtist]);
+
+  const isShowingFeatured = !currentArtist || filteredProducts.length === 0;
+  const hasNoProducts = currentArtist && filteredProducts.length === 0;
 
   return (
     <section className="py-12 md:py-20">
@@ -131,10 +208,17 @@ export function ProductGrid() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {t('products.portfolio')}{' '}
-            <span className="text-gradient-neon">
-              {currentArtist?.name || t('products.artists')}
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 transition-colors duration-500">
+            {isShowingFeatured ? t('sections.featuredArtists') : t('products.portfolio')}{' '}
+            <span 
+              className="text-gradient-neon transition-all duration-500"
+              style={{ 
+                backgroundImage: currentArtist 
+                  ? `linear-gradient(135deg, ${currentArtist.neonColor} 0%, ${currentArtist.neonColor}aa 100%)` 
+                  : undefined 
+              }}
+            >
+              {currentArtist?.name || 'Destaques'}
             </span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -142,20 +226,59 @@ export function ProductGrid() {
           </p>
         </motion.div>
 
-        <div className="masonry-grid">
-          {products.map((product, index) => (
+        {/* Empty State */}
+        <AnimatePresence mode="wait">
+          {hasNoProducts ? (
             <motion.div
-              key={product.id}
+              key="empty"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="masonry-item"
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="text-center py-20"
             >
-              <ProductCard product={product} />
+              <div 
+                className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-500"
+                style={{
+                  backgroundColor: `${neonColor}20`,
+                  boxShadow: `0 0 30px ${neonColor}30`,
+                }}
+              >
+                <Clock 
+                  className="w-10 h-10 transition-colors duration-500"
+                  style={{ color: neonColor }}
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">
+                {t('products.comingSoon') || 'Em breve'}
+              </h3>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Em breve, novas obras de <span style={{ color: neonColor }} className="font-semibold">{currentArtist?.name}</span> estarão disponíveis.
+              </p>
             </motion.div>
-          ))}
-        </div>
+          ) : (
+            <motion.div
+              key={currentArtist?.id || 'featured'}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="masonry-grid"
+            >
+              {filteredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.4 }}
+                  className="masonry-item"
+                >
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -174,6 +297,7 @@ function ProductCard({ product }: { product: Product }) {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const { convertToBRL } = useCurrency();
   const { t } = useLanguage();
+  const { neonColor } = useArtistTheme();
   const isMobile = useIsMobile();
 
   const versions: VersionOption[] = [
@@ -186,7 +310,7 @@ function ProductCard({ product }: { product: Product }) {
       : []),
   ];
 
-  const currentVersion = versions.find(v => v.key === selectedVersion);
+  const currentVersion = versions.find((v) => v.key === selectedVersion);
   const currentPriceUSD = currentVersion?.priceUSD;
   const currentPriceBRL = currentPriceUSD ? convertToBRL(currentPriceUSD) : null;
 
@@ -202,7 +326,11 @@ function ProductCard({ product }: { product: Product }) {
       <motion.div
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
-        className="group relative rounded-xl overflow-hidden bg-card neon-border card-hover"
+        className="group relative rounded-xl overflow-hidden bg-card neon-border card-hover transition-all duration-500"
+        style={{
+          borderColor: isHovered ? `${neonColor}50` : undefined,
+          boxShadow: isHovered ? `0 0 20px ${neonColor}20` : undefined,
+        }}
       >
         {/* Image */}
         <div className="relative overflow-hidden" style={{ height: product.height }}>
@@ -214,7 +342,7 @@ function ProductCard({ product }: { product: Product }) {
             transition={{ duration: 0.4 }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-          
+
           {/* Quick Add Button */}
           <AnimatePresence>
             {isHovered && (
@@ -224,7 +352,13 @@ function ProductCard({ product }: { product: Product }) {
                 exit={{ opacity: 0, y: 20 }}
                 className="absolute bottom-4 left-4 right-4"
               >
-                <Button className="w-full gradient-neon text-primary-foreground font-semibold gap-2 min-h-[44px] touch-manipulation">
+                <Button 
+                  className="w-full font-semibold gap-2 min-h-[44px] touch-manipulation transition-all duration-500"
+                  style={{
+                    background: `linear-gradient(135deg, ${neonColor} 0%, ${neonColor}cc 100%)`,
+                    color: '#000',
+                  }}
+                >
                   <ShoppingBag className="w-4 h-4" />
                   {t('products.addToCart')}
                 </Button>
@@ -242,7 +376,10 @@ function ProductCard({ product }: { product: Product }) {
             </div>
             {currentPriceUSD && currentPriceBRL && (
               <div className="text-right">
-                <p className="text-artist-primary font-bold text-lg font-mono tabular-nums">
+                <p 
+                  className="font-bold text-lg font-mono tabular-nums transition-colors duration-500"
+                  style={{ color: neonColor }}
+                >
                   R$ {currentPriceBRL.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
                 <p className="text-xs text-muted-foreground font-mono tabular-nums">
@@ -273,11 +410,12 @@ function ProductCard({ product }: { product: Product }) {
                 <button
                   key={version.key}
                   onClick={() => setSelectedVersion(version.key)}
-                  className={`flex items-center gap-1 px-3 py-2 rounded-full text-xs font-medium transition-all min-h-[36px] touch-manipulation ${
-                    selectedVersion === version.key
-                      ? 'bg-artist-primary text-primary-foreground neon-glow'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                  }`}
+                  className="flex items-center gap-1 px-3 py-2 rounded-full text-xs font-medium transition-all min-h-[36px] touch-manipulation duration-500"
+                  style={{
+                    backgroundColor: selectedVersion === version.key ? neonColor : 'hsl(var(--muted))',
+                    color: selectedVersion === version.key ? '#000' : 'hsl(var(--muted-foreground))',
+                    boxShadow: selectedVersion === version.key ? `0 0 15px ${neonColor}50` : 'none',
+                  }}
                 >
                   {version.icon}
                   <span>{version.label}</span>
@@ -304,11 +442,13 @@ function ProductCard({ product }: { product: Product }) {
             <button
               key={version.key}
               onClick={() => handleVersionSelect(version.key)}
-              className={`w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all min-h-[56px] touch-manipulation ${
-                selectedVersion === version.key
-                  ? 'bg-artist-primary/20 border border-artist-primary text-artist-primary'
-                  : 'bg-muted/50 border border-transparent hover:bg-muted'
-              }`}
+              className="w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all min-h-[56px] touch-manipulation duration-500"
+              style={{
+                backgroundColor: selectedVersion === version.key ? `${neonColor}20` : 'hsl(var(--muted) / 0.5)',
+                borderWidth: '1px',
+                borderColor: selectedVersion === version.key ? neonColor : 'transparent',
+                color: selectedVersion === version.key ? neonColor : undefined,
+              }}
             >
               <div className="flex items-center gap-3">
                 {version.icon}
@@ -330,7 +470,13 @@ function ProductCard({ product }: { product: Product }) {
 
         {/* Add to Cart button in bottom sheet */}
         <div className="p-4 border-t border-border">
-          <Button className="w-full gradient-neon text-primary-foreground font-semibold gap-2 min-h-[52px] touch-manipulation">
+          <Button 
+            className="w-full font-semibold gap-2 min-h-[52px] touch-manipulation"
+            style={{
+              background: `linear-gradient(135deg, ${neonColor} 0%, ${neonColor}cc 100%)`,
+              color: '#000',
+            }}
+          >
             <ShoppingBag className="w-5 h-5" />
             {t('products.addToCart')}
           </Button>
@@ -342,7 +488,8 @@ function ProductCard({ product }: { product: Product }) {
 
 function CustomServiceDialog({ productTitle, artistName }: { productTitle: string; artistName: string }) {
   const { t } = useLanguage();
-  
+  const { neonColor } = useArtistTheme();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -352,15 +499,30 @@ function CustomServiceDialog({ productTitle, artistName }: { productTitle: strin
           exit={{ opacity: 0, height: 0 }}
           className="mt-4"
         >
-          <Button variant="outline" className="w-full neon-border group min-h-[48px] touch-manipulation">
+          <Button 
+            variant="outline" 
+            className="w-full group min-h-[48px] touch-manipulation transition-all duration-500"
+            style={{
+              borderColor: `${neonColor}50`,
+              boxShadow: `inset 0 0 10px ${neonColor}10, 0 0 10px ${neonColor}20`,
+            }}
+          >
             <Paintbrush className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
             {t('products.requestQuote')}
           </Button>
         </motion.div>
       </DialogTrigger>
-      <DialogContent className="glass-strong border-artist-primary/20 max-w-lg mx-4">
+      <DialogContent 
+        className="glass-strong max-w-lg mx-4 transition-all duration-500"
+        style={{
+          borderColor: `${neonColor}30`,
+        }}
+      >
         <DialogHeader>
-          <DialogTitle className="text-2xl neon-text-subtle text-artist-primary">
+          <DialogTitle 
+            className="text-2xl neon-text-subtle transition-colors duration-500"
+            style={{ color: neonColor }}
+          >
             {t('products.customPainting')}
           </DialogTitle>
           <p className="text-muted-foreground">
@@ -394,12 +556,19 @@ function CustomServiceDialog({ productTitle, artistName }: { productTitle: strin
           </div>
           <div>
             <label className="text-sm font-medium mb-1.5 block">{t('products.environmentDescription')}</label>
-            <Textarea 
-              placeholder={t('products.environmentPlaceholder')} 
+            <Textarea
+              placeholder={t('products.environmentPlaceholder')}
               className="bg-muted/50 min-h-[100px]"
             />
           </div>
-          <Button type="submit" className="w-full gradient-neon text-primary-foreground font-semibold min-h-[52px] touch-manipulation">
+          <Button 
+            type="submit" 
+            className="w-full font-semibold min-h-[52px] touch-manipulation"
+            style={{
+              background: `linear-gradient(135deg, ${neonColor} 0%, ${neonColor}cc 100%)`,
+              color: '#000',
+            }}
+          >
             <Zap className="w-4 h-4 mr-2" />
             {t('products.submitQuote')}
           </Button>
