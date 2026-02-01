@@ -3,7 +3,7 @@ import { ArtistThemeProvider } from '@/contexts/ArtistThemeContext';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { Header } from '@/components/Header';
-import { HeroSection } from '@/components/HeroSection';
+import { HeroSlider } from '@/components/HeroSlider';
 import { ArtistSlider } from '@/components/ArtistSlider';
 import { ProductGrid } from '@/components/ProductGrid';
 import { ArtNews } from '@/components/ArtNews';
@@ -24,7 +24,7 @@ const Index = () => {
           >
             <Header />
             <main className="pb-20 md:pb-0">
-              <HeroSection />
+              <HeroSlider />
               <ArtistSlider />
               <ProductGrid />
               <PaymentMethodsBadge />
