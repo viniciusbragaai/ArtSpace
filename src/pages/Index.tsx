@@ -24,11 +24,13 @@ const Index = () => {
           >
             <Header />
             <main className="pb-20 md:pb-0">
-              <ArtistSlider />
-              <HeroSlider />
-              <ProductGrid />
-              <PaymentMethodsBadge />
-              <ArtNews />
+              <div className="max-w-6xl mx-auto px-4">
+                <ArtistSlider />
+                <ProductGrid />
+                <HeroSlider />
+                <PaymentMethodsBadge />
+                <ArtNews />
+              </div>
             </main>
             <Footer />
             <BottomNavigation />

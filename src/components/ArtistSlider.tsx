@@ -28,7 +28,7 @@ export function ArtistSlider() {
   };
 
   return (
-    <section className="relative py-4 md:py-6 overflow-hidden pt-16 md:pt-24">
+    <section className="relative py-4 md:py-6 overflow-hidden pt-16 md:pt-20">
       {/* Background Gradient */}
       <motion.div
         className="absolute inset-0 opacity-20 transition-all duration-500"

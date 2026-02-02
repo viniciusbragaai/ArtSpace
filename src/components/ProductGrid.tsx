@@ -168,8 +168,8 @@ const products: Product[] = [
   },
   {
     id: '10',
-    title: 'Street Raw',
-    artist: 'Ozill',
+    title: 'Stencil Urbano',
+    artist: 'Ozi Stencil',
     artistId: '10',
     image: 'https://images.unsplash.com/photo-1561839561-b13bcfe95249?w=600&h=600&fit=crop',
     priceOriginalUSD: 720,
@@ -200,13 +200,13 @@ export function ProductGrid() {
   const hasNoProducts = currentArtist && filteredProducts.length === 0;
 
   return (
-    <section className="py-12 md:py-20">
-      <div className="container mx-auto px-4">
+    <section className="py-6 md:py-10">
+      <div className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 transition-colors duration-500">
             {isShowingFeatured ? t('sections.featuredArtists') : t('products.portfolio')}{' '}

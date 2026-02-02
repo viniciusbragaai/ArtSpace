@@ -11,12 +11,12 @@ import artspaceLogo from '@/assets/artspace-logo.png';
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount] = useState(2);
+  const [cartCount, setCartCount] = useState(0);
   const { t } = useLanguage();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-strong safe-area-top">
-      <div className="container mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-20">
           {/* Logo with Neon Glow - Synced with Theme */}
           <motion.a
