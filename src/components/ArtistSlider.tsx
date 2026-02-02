@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
 import { useArtistTheme, Artist } from '@/contexts/ArtistThemeContext';
@@ -9,7 +9,7 @@ export function ArtistSlider() {
   const { artists, currentArtist, setCurrentArtist } = useArtistTheme();
   const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToArtist = (index: number) => {
     const newIndex = Math.max(0, Math.min(index, artists.length - 1));
@@ -27,17 +27,11 @@ export function ArtistSlider() {
     scrollToArtist(newIndex);
   };
 
-  useEffect(() => {
-    if (artists.length > 0) {
-      setCurrentArtist(artists[0]);
-    }
-  }, []);
-
   return (
-    <section className="relative py-8 md:py-12 overflow-hidden">
+    <section className="relative py-4 md:py-6 overflow-hidden pt-16 md:pt-24">
       {/* Background Gradient */}
       <motion.div
-        className="absolute inset-0 opacity-30 transition-all duration-500"
+        className="absolute inset-0 opacity-20 transition-all duration-500"
         animate={{
           background: `radial-gradient(ellipse at center, ${currentArtist?.neonColor}33 0%, transparent 70%)`,
         }}
@@ -45,26 +39,26 @@ export function ArtistSlider() {
       />
 
       <div className="container mx-auto px-4">
-        <div className="text-center mb-6">
-          <h2 className="text-sm uppercase tracking-widest text-muted-foreground mb-2">
+        <div className="text-center mb-3">
+          <h2 className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
             {t('artist.selectArtist')}
           </h2>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentArtist?.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
               className="flex flex-col items-center gap-1"
             >
-              <h3 className="text-3xl md:text-4xl font-bold neon-text-subtle text-artist-primary transition-colors duration-500">
+              <h3 className="text-2xl md:text-3xl font-bold neon-text-subtle text-artist-primary transition-colors duration-500">
                 {currentArtist?.name}
               </h3>
               {currentArtist && (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <span 
-                    className="px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-500"
+                    className="px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-all duration-500"
                     style={{
                       backgroundColor: `${currentArtist.neonColor}20`,
                       borderColor: `${currentArtist.neonColor}50`,
@@ -77,10 +71,11 @@ export function ArtistSlider() {
                     href={currentArtist.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-artist-primary transition-colors"
+                    className="relative z-50 flex items-center gap-1 text-xs text-muted-foreground hover:text-artist-primary transition-colors cursor-pointer"
+                    style={{ pointerEvents: 'auto' }}
                   >
                     <Instagram 
-                      className="w-4 h-4 transition-all duration-300"
+                      className="w-3.5 h-3.5 transition-all duration-300"
                       style={{
                         filter: `drop-shadow(0 0 0px ${currentArtist.neonColor})`,
                       }}
@@ -101,22 +96,22 @@ export function ArtistSlider() {
           </AnimatePresence>
         </div>
 
-        {/* Slider Container */}
+        {/* Slider Container - Show All Artists */}
         <div className="relative flex items-center justify-center">
           {/* Navigation Buttons */}
           <Button
             variant="ghost"
             size="icon"
             onClick={handlePrev}
-            className="absolute left-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20 min-w-[44px] min-h-[44px] touch-manipulation transition-all duration-500"
+            className="absolute left-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20 min-w-[36px] min-h-[36px] w-9 h-9 touch-manipulation transition-all duration-500"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
           </Button>
 
-          {/* Artists - Horizontal scroll on mobile */}
+          {/* Artists - All Visible with Horizontal Scroll */}
           <div
-            ref={sliderRef}
-            className="flex items-center justify-center gap-4 md:gap-8 px-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory md:overflow-hidden py-[15px]"
+            ref={scrollContainerRef}
+            className="flex items-center justify-center gap-2 md:gap-3 px-10 overflow-x-auto scrollbar-hide py-2"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -128,8 +123,6 @@ export function ArtistSlider() {
                 artist={artist}
                 isActive={index === activeIndex}
                 onClick={() => scrollToArtist(index)}
-                index={index}
-                activeIndex={activeIndex}
               />
             ))}
           </div>
@@ -138,23 +131,23 @@ export function ArtistSlider() {
             variant="ghost"
             size="icon"
             onClick={handleNext}
-            className="absolute right-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20 min-w-[44px] min-h-[44px] touch-manipulation transition-all duration-500"
+            className="absolute right-0 z-10 neon-border bg-background/50 hover:bg-artist-primary/20 min-w-[36px] min-h-[36px] w-9 h-9 touch-manipulation transition-all duration-500"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5" />
           </Button>
         </div>
 
-        {/* Artist Info */}
+        {/* Artist Bio - Compact */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentArtist?.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="text-center mt-8 max-w-lg mx-auto"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="text-center mt-3 max-w-md mx-auto"
           >
-            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+            <p className="text-muted-foreground text-xs md:text-sm leading-relaxed line-clamp-2">
               {currentArtist?.bio}
             </p>
             {currentArtist && (
@@ -162,11 +155,8 @@ export function ArtistSlider() {
                 href={currentArtist.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-muted/50 border border-border transition-all duration-500 group"
-                style={{
-                  '--hover-bg': `${currentArtist.neonColor}20`,
-                  '--hover-border': `${currentArtist.neonColor}50`,
-                } as React.CSSProperties}
+                className="relative z-50 inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border transition-all duration-500 group cursor-pointer"
+                style={{ pointerEvents: 'auto' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = `${currentArtist.neonColor}20`;
                   e.currentTarget.style.borderColor = `${currentArtist.neonColor}50`;
@@ -177,7 +167,7 @@ export function ArtistSlider() {
                 }}
               >
                 <Instagram
-                  className="w-5 h-5 text-muted-foreground transition-all duration-300"
+                  className="w-4 h-4 text-muted-foreground transition-all duration-300"
                   style={{
                     filter: `drop-shadow(0 0 0px ${currentArtist.neonColor})`,
                   }}
@@ -190,7 +180,7 @@ export function ArtistSlider() {
                     e.currentTarget.style.color = '';
                   }}
                 />
-                <span className="text-sm font-medium text-muted-foreground group-hover:text-artist-primary transition-colors">
+                <span className="text-xs font-medium text-muted-foreground group-hover:text-artist-primary transition-colors">
                   {t('artist.viewProfile')}
                 </span>
               </a>
@@ -198,21 +188,21 @@ export function ArtistSlider() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Dots Indicator */}
-        <div className="flex justify-center gap-1 mt-6 flex-wrap max-w-xs mx-auto">
+        {/* Dots Indicator - Single Line */}
+        <div className="flex justify-center gap-0.5 mt-3 flex-nowrap overflow-hidden">
           {artists.map((artist, index) => (
             <button
               key={index}
               onClick={() => scrollToArtist(index)}
-              className="min-w-[32px] min-h-[32px] flex items-center justify-center touch-manipulation"
+              className="min-w-[24px] min-h-[24px] flex items-center justify-center touch-manipulation"
             >
               <span
                 className="block transition-all duration-500 rounded-full"
                 style={{
-                  width: index === activeIndex ? '20px' : '8px',
-                  height: '8px',
+                  width: index === activeIndex ? '14px' : '6px',
+                  height: '6px',
                   backgroundColor: index === activeIndex ? artist.neonColor : 'hsl(var(--muted))',
-                  boxShadow: index === activeIndex ? `0 0 10px ${artist.neonColor}` : 'none',
+                  boxShadow: index === activeIndex ? `0 0 8px ${artist.neonColor}` : 'none',
                 }}
               />
             </button>
@@ -227,13 +217,10 @@ interface ArtistCardProps {
   artist: Artist;
   isActive: boolean;
   onClick: () => void;
-  index: number;
-  activeIndex: number;
 }
 
-function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCardProps) {
+function ArtistCard({ artist, isActive, onClick }: ArtistCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const offset = index - activeIndex;
 
   return (
     <motion.button
@@ -241,24 +228,23 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       animate={{
-        scale: isActive ? 1.2 : 0.75,
-        opacity: Math.abs(offset) > 3 ? 0 : isActive ? 1 : 0.5,
-        x: offset * 15,
+        scale: isActive ? 1.15 : 0.9,
+        opacity: isActive ? 1 : 0.7,
       }}
-      whileHover={{ scale: isActive ? 1.25 : 0.8 }}
-      whileTap={{ scale: isActive ? 1.15 : 0.7 }}
+      whileHover={{ scale: isActive ? 1.2 : 0.95 }}
+      whileTap={{ scale: isActive ? 1.1 : 0.85 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className={`relative flex-shrink-0 snap-center min-w-[44px] min-h-[44px] touch-manipulation ${
+      className={`relative flex-shrink-0 min-w-[44px] min-h-[44px] touch-manipulation ${
         isActive ? 'z-10' : 'z-0'
       }`}
     >
       {/* Studio Background Container with Vignette */}
       <div
-        className="relative w-14 h-14 md:w-20 md:h-20 aspect-square rounded-full overflow-hidden transition-all duration-500"
+        className="relative w-12 h-12 md:w-14 md:h-14 aspect-square rounded-full overflow-hidden transition-all duration-500"
         style={{
           backgroundColor: isActive || isHovered ? artist.neonColor : `${artist.neonColor}40`,
           boxShadow: isActive
-            ? `inset 0 0 50px rgba(0,0,0,0.5), 0 0 20px ${artist.neonColor}60`
+            ? `inset 0 0 50px rgba(0,0,0,0.5), 0 0 15px ${artist.neonColor}60`
             : 'inset 0 0 50px rgba(0,0,0,0.5)',
           border: isActive ? `2px solid ${artist.neonColor}` : '1px solid hsl(var(--border))',
         }}
@@ -272,7 +258,6 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
             filter: isActive ? 'none' : 'grayscale(30%)',
           }}
           onError={(e) => {
-            // Fallback to placeholder if PNG not found
             e.currentTarget.src = `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop`;
           }}
         />
@@ -284,7 +269,7 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
             className="absolute inset-0 rounded-full"
             style={{
               border: `2px solid ${artist.neonColor}`,
-              boxShadow: `0 0 15px ${artist.neonColor}`,
+              boxShadow: `0 0 12px ${artist.neonColor}`,
             }}
             initial={false}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -294,11 +279,11 @@ function ArtistCard({ artist, isActive, onClick, index, activeIndex }: ArtistCar
 
       {/* Name tooltip on active */}
       <motion.div
-        animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
-        className="absolute -bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center"
+        animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 5 }}
+        className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center"
       >
         <p
-          className="text-xs font-semibold whitespace-nowrap transition-all duration-500"
+          className="text-[10px] font-semibold whitespace-nowrap transition-all duration-500"
           style={{ color: artist.neonColor }}
         >
           {artist.name}

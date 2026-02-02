@@ -120,7 +120,7 @@ export function HeroSlider() {
 
   return (
     <section
-      className="relative min-h-[60vh] md:min-h-[70vh] overflow-hidden pt-20"
+      className="relative min-h-[35vh] md:min-h-[40vh] overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -132,60 +132,47 @@ export function HeroSlider() {
               {/* Animated Background */}
               <div className="absolute inset-0 gradient-artist" />
               <div className={cn('absolute inset-0 bg-gradient-to-br opacity-50', slide.gradientClass)} />
-              <div className="absolute inset-0 opacity-30">
+              <div className="absolute inset-0 opacity-20">
                 <div
-                  className="absolute top-1/4 left-1/4 w-96 h-96 bg-artist-primary/20 rounded-full blur-3xl animate-float"
+                  className="absolute top-1/4 left-1/4 w-64 h-64 bg-artist-primary/20 rounded-full blur-3xl animate-float"
                   style={{ animationDelay: `${index * 0.5}s` }}
                 />
                 <div
-                  className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-artist-secondary/20 rounded-full blur-3xl animate-float"
+                  className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-artist-secondary/20 rounded-full blur-3xl animate-float"
                   style={{ animationDelay: `${index * 0.5 + 1.5}s` }}
                 />
               </div>
 
-              {/* Grid Pattern */}
-              <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
-                                   linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
-                  backgroundSize: '50px 50px',
-                }}
-              />
-
-              {/* Slide Content */}
+              {/* Slide Content - Minimalist */}
               <div className="relative z-10 h-full flex items-center justify-center">
                 <div className="container mx-auto px-4">
                   <AnimatePresence mode="wait">
                     {selectedIndex === index && (
                       <motion.div
                         key={slide.id}
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -30 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center max-w-4xl mx-auto"
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-center max-w-2xl mx-auto"
                       >
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 leading-tight">
                           {t(slide.titleKey)}{' '}
                           <span className="text-gradient-neon">{t(slide.highlightKey)}</span>
-                          <br />
-                          {t(slide.subtitleKey)}{' '}
-                          <span className="neon-text-subtle text-artist-primary">{t(slide.accentKey)}</span>
-                        </h1>
+                        </h2>
 
-                        <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                        <p className="text-sm md:text-base text-muted-foreground mb-4 max-w-lg mx-auto line-clamp-2">
                           {t(slide.descriptionKey)}
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <div className="flex items-center justify-center gap-3">
                           <Button
-                            size="lg"
-                            className="gradient-neon text-primary-foreground font-semibold px-8 h-12 neon-glow"
+                            size="sm"
+                            className="gradient-neon text-primary-foreground font-semibold px-6 h-9"
                           >
                             {t(slide.primaryBtnKey)}
                           </Button>
-                          <Button size="lg" variant="outline" className="neon-border h-12 px-8">
+                          <Button size="sm" variant="outline" className="neon-border h-9 px-6">
                             {t(slide.secondaryBtnKey)}
                           </Button>
                         </div>

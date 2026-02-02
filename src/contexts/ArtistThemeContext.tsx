@@ -75,7 +75,7 @@ const defaultArtists: Artist[] = [
     theme: 'street',
     bio: 'A essência do graffiti santista traduzida em letras e formas que dominam o cenário urbano da Baixada.',
     specialty: 'Street Writing',
-    neonColor: artistColors['1'],
+    neonColor: '#FFEF00',
   },
   {
     id: '2',
@@ -86,7 +86,7 @@ const defaultArtists: Artist[] = [
     theme: 'mural',
     bio: 'Muralismo que conecta a natureza e o abstrato, transformando espaços em experiências visuais orgânicas.',
     specialty: 'Muralismo',
-    neonColor: artistColors['2'],
+    neonColor: '#00FFFF',
   },
   {
     id: '3',
@@ -97,7 +97,7 @@ const defaultArtists: Artist[] = [
     theme: 'abstract',
     bio: 'Lenda mundial da street art, conhecido por dar vida e cor aos lugares mais esquecidos e subterrâneos.',
     specialty: 'Graffiti Abstrato',
-    neonColor: artistColors['3'],
+    neonColor: '#50C878',
   },
   {
     id: '4',
@@ -108,7 +108,7 @@ const defaultArtists: Artist[] = [
     theme: 'classic',
     bio: 'A delicadeza e força da arte que transita entre o design e a intervenção urbana contemporânea.',
     specialty: 'Fine Art',
-    neonColor: artistColors['4'],
+    neonColor: '#FF00FF',
   },
   {
     id: '5',
@@ -119,7 +119,7 @@ const defaultArtists: Artist[] = [
     theme: 'pop',
     bio: 'Alegria e cores vibrantes que personificam o espírito da arte de rua brasileira em cada traço.',
     specialty: 'Pop Art',
-    neonColor: artistColors['5'],
+    neonColor: '#FF5F1F',
   },
   {
     id: '6',
@@ -130,7 +130,7 @@ const defaultArtists: Artist[] = [
     theme: 'minimal',
     bio: 'Traços marcantes e narrativa visual potente que desafiam o olhar comum sobre a cidade.',
     specialty: 'Ilustração',
-    neonColor: artistColors['6'],
+    neonColor: '#FF0000',
   },
   {
     id: '7',
@@ -141,7 +141,7 @@ const defaultArtists: Artist[] = [
     theme: 'neon',
     bio: 'Expressão jovem e talento nato que une o legado familiar à inovação da arte contemporânea.',
     specialty: 'Nova Geração',
-    neonColor: artistColors['7'],
+    neonColor: '#F0F8FF',
   },
   {
     id: '8',
@@ -152,7 +152,7 @@ const defaultArtists: Artist[] = [
     theme: 'classic',
     bio: 'Mestre da composição, trazendo a sofisticação da arte de galeria para o contexto da ArtSpace.',
     specialty: 'Fine Art',
-    neonColor: artistColors['8'],
+    neonColor: '#FFBF00',
   },
   {
     id: '9',
@@ -163,7 +163,7 @@ const defaultArtists: Artist[] = [
     theme: 'realism',
     bio: 'O realismo e a técnica apurada transformando superfícies em janelas para novas percepções.',
     specialty: 'Realismo',
-    neonColor: artistColors['9'],
+    neonColor: '#6A0DAD',
   },
   {
     id: '10',
@@ -174,7 +174,7 @@ const defaultArtists: Artist[] = [
     theme: 'raw',
     bio: 'Estilo autêntico e misterioso, trazendo a força bruta e a verdade das ruas para o acervo internacional.',
     specialty: 'Street Raw',
-    neonColor: artistColors['10'],
+    neonColor: '#808080',
   },
 ];
 

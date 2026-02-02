@@ -44,44 +44,16 @@ export function Header() {
             />
           </motion.a>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden lg:flex flex-1 max-w-md mx-8">
-            <AnimatePresence mode="wait">
-              {isSearchOpen ? (
-                <motion.div
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: '100%', opacity: 1 }}
-                  exit={{ width: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative w-full"
-                >
-                  <Input
-                    type="search"
-                    placeholder={t('header.search')}
-                    className="w-full bg-muted/50 border-artist-primary/30 focus:border-artist-primary rounded-full pl-10 pr-10 h-11"
-                    autoFocus
-                  />
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <button
-                    onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 min-w-[44px] min-h-[44px] flex items-center justify-center"
-                  >
-                    <X className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors" />
-                  </button>
-                </motion.div>
-              ) : (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setIsSearchOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-muted/50 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground min-h-[44px]"
-                >
-                  <Search className="w-4 h-4" />
-                  <span className="text-sm">{t('header.searchShort')}</span>
-                </motion.button>
-              )}
-            </AnimatePresence>
+          {/* Search Bar - Desktop - Always Expanded */}
+          <div className="hidden lg:flex flex-1 mx-8">
+            <div className="relative w-full">
+              <Input
+                type="search"
+                placeholder={t('header.search')}
+                className="w-full bg-muted/50 border-artist-primary/30 focus:border-artist-primary rounded-full pl-10 pr-4 h-11"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            </div>
           </div>
 
           {/* Right Navigation - Desktop */}
