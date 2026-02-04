@@ -6,10 +6,12 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { useArtistTheme } from '@/contexts/ArtistThemeContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 // Icons for new SKUs
 const MugIcon = () => (
@@ -298,6 +300,7 @@ function ProductCard({ product }: { product: Product }) {
   const { convertToBRL } = useCurrency();
   const { t } = useLanguage();
   const { neonColor } = useArtistTheme();
+  const { addItem } = useCart();
   const isMobile = useIsMobile();
 
   const versions: VersionOption[] = [
@@ -313,6 +316,23 @@ function ProductCard({ product }: { product: Product }) {
   const currentVersion = versions.find((v) => v.key === selectedVersion);
   const currentPriceUSD = currentVersion?.priceUSD;
   const currentPriceBRL = currentPriceUSD ? convertToBRL(currentPriceUSD) : null;
+
+  const handleAddToCart = () => {
+    if (!currentPriceUSD) return;
+    
+    addItem({
+      id: `${product.id}-${selectedVersion}`,
+      title: product.title,
+      artist: product.artist,
+      image: product.image,
+      priceUSD: currentPriceUSD,
+      sku: selectedVersion.toUpperCase(),
+    });
+    
+    toast.success(`${product.title} adicionado ao carrinho!`, {
+      description: `${currentVersion?.label} - R$ ${currentPriceBRL?.toFixed(0)}`,
+    });
+  };
 
   const handleVersionSelect = (key: ProductVersion) => {
     setSelectedVersion(key);
@@ -358,6 +378,7 @@ function ProductCard({ product }: { product: Product }) {
                     background: `linear-gradient(135deg, ${neonColor} 0%, ${neonColor}cc 100%)`,
                     color: '#000',
                   }}
+                  onClick={handleAddToCart}
                 >
                   <ShoppingBag className="w-4 h-4" />
                   {t('products.addToCart')}

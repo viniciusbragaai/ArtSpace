@@ -49,8 +49,8 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     fetchExchangeRate();
     
-    // Refresh every 5 minutes
-    const interval = setInterval(fetchExchangeRate, 5 * 60 * 1000);
+    // Refresh every 60 seconds for live market feel
+    const interval = setInterval(fetchExchangeRate, 60 * 1000);
     
     return () => clearInterval(interval);
   }, [fetchExchangeRate]);

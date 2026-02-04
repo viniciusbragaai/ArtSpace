@@ -28,7 +28,7 @@ export function ArtistSlider() {
   };
 
   return (
-    <section className="relative py-4 md:py-6 overflow-hidden pt-16 md:pt-20">
+    <section className="relative py-4 md:py-6 overflow-visible pt-20 md:pt-24">
       {/* Background Gradient */}
       <motion.div
         className="absolute inset-0 opacity-20 transition-all duration-500"
@@ -228,11 +228,11 @@ function ArtistCard({ artist, isActive, onClick }: ArtistCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       animate={{
-        scale: isActive ? 1.15 : 0.9,
+        scale: isActive ? 1.1 : 0.95,
         opacity: isActive ? 1 : 0.7,
       }}
-      whileHover={{ scale: isActive ? 1.2 : 0.95 }}
-      whileTap={{ scale: isActive ? 1.1 : 0.85 }}
+      whileHover={{ scale: isActive ? 1.15 : 1.0 }}
+      whileTap={{ scale: isActive ? 1.05 : 0.9 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       className={`relative flex-shrink-0 min-w-[44px] min-h-[44px] touch-manipulation ${
         isActive ? 'z-10' : 'z-0'
@@ -277,18 +277,6 @@ function ArtistCard({ artist, isActive, onClick }: ArtistCardProps) {
         )}
       </div>
 
-      {/* Name tooltip on active */}
-      <motion.div
-        animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 5 }}
-        className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center"
-      >
-        <p
-          className="text-[10px] font-semibold whitespace-nowrap transition-all duration-500"
-          style={{ color: artist.neonColor }}
-        >
-          {artist.name}
-        </p>
-      </motion.div>
     </motion.button>
   );
 }
