@@ -20,4 +20,4 @@
 
 ## 👨‍💻 Developer
 Developed by **Vinicius**.
-Contact: [Your LinkedIn URL Here]
+Contact: https://www.linkedin.com/in/viniciusbragaai/
