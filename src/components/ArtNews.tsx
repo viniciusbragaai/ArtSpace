@@ -69,8 +69,8 @@ export function ArtNews() {
   };
 
   return (
-    <section className="py-12 md:py-20 bg-card/50">
-      <div className="container mx-auto px-4">
+    <section className="py-8 md:py-12 bg-card/50">
+      <div className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

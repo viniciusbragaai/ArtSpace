@@ -6,13 +6,16 @@ import { Input } from '@/components/ui/input';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { ExchangeRateDisplay } from '@/components/ExchangeRateDisplay';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import artspaceLogo from '@/assets/artspace-logo.png';
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
   const { t } = useLanguage();
+  const { totalItems, setIsCartOpen } = useCart();
+  const { isAuthenticated, setIsAuthModalOpen } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-strong safe-area-top">
@@ -66,22 +69,39 @@ export function Header() {
 
             <div className="w-px h-8 bg-border mx-1" />
 
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-muted min-h-[44px] px-4">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground hover:bg-muted min-h-[44px] px-4"
+              onClick={() => isAuthenticated ? window.location.href = '/perfil' : setIsAuthModalOpen(true)}
+            >
               <User className="w-4 h-4 mr-2" />
-              {t('header.login')}
+              {isAuthenticated ? 'Perfil' : t('header.login')}
             </Button>
-            <Button variant="outline" size="sm" className="neon-border hover:bg-artist-primary/10 text-foreground min-h-[44px] px-4">
-              {t('header.register')}
-            </Button>
-            <Button variant="ghost" size="icon" className="relative min-w-[44px] min-h-[44px]">
+            {!isAuthenticated && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="neon-border hover:bg-artist-primary/10 text-foreground min-h-[44px] px-4"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                {t('header.register')}
+              </Button>
+            )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative min-w-[44px] min-h-[44px]"
+              onClick={() => setIsCartOpen(true)}
+            >
               <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && (
+              {totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-artist-primary text-primary-foreground text-xs flex items-center justify-center font-medium"
                 >
-                  {cartCount}
+                  {totalItems}
                 </motion.span>
               )}
             </Button>

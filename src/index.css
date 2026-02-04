@@ -120,12 +120,16 @@
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Space Grotesk', sans-serif;
     overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
     overscroll-behavior-y: contain;
   }
 

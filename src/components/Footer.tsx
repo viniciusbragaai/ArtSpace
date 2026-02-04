@@ -34,11 +34,11 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">{t('footer.navigation')}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.artists')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.artworks')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.printProducts')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.events')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.aboutUs')}</a></li>
+              <li><a href="/artistas" className="hover:text-artist-primary transition-colors">{t('footer.artists')}</a></li>
+              <li><a href="/portfolio" className="hover:text-artist-primary transition-colors">{t('footer.artworks')}</a></li>
+              <li><a href="/explorar" className="hover:text-artist-primary transition-colors">{t('footer.printProducts')}</a></li>
+              <li><a href="/eventos" className="hover:text-artist-primary transition-colors">{t('footer.events')}</a></li>
+              <li><a href="/about" className="hover:text-artist-primary transition-colors">{t('footer.aboutUs')}</a></li>
             </ul>
           </div>
 
@@ -46,10 +46,10 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">{t('footer.services')}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.customPainting')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.artConsulting')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.corporateMurals')}</a></li>
-              <li><a href="#" className="hover:text-artist-primary transition-colors">{t('footer.eventCuration')}</a></li>
+              <li><a href="/pinturapersonalizada" className="hover:text-artist-primary transition-colors">{t('footer.customPainting')}</a></li>
+              <li><a href="/consultoriadearte" className="hover:text-artist-primary transition-colors">{t('footer.artConsulting')}</a></li>
+              <li><a href="/muraiscorporativos" className="hover:text-artist-primary transition-colors">{t('footer.corporateMurals')}</a></li>
+              <li><a href="/curadoriadeeventos" className="hover:text-artist-primary transition-colors">{t('footer.eventCuration')}</a></li>
             </ul>
           </div>
 
@@ -75,10 +75,10 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© 2024 ArtSpace. {t('footer.allRights')}</p>
+          <p>© 2026 ArtSpace. Todos os direitos reservados.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">{t('footer.termsOfUse')}</a>
-            <a href="#" className="hover:text-foreground transition-colors">{t('footer.privacy')}</a>
+            <a href="/termosdeuso" className="hover:text-foreground transition-colors">{t('footer.termsOfUse')}</a>
+            <a href="/privacidade" className="hover:text-foreground transition-colors">{t('footer.privacy')}</a>
           </div>
         </div>
       </div>
