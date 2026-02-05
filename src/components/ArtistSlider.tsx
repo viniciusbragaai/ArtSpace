@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Instagram, BadgeCheck } from 'lucide-react';
 import { useArtistTheme, Artist } from '@/contexts/ArtistThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -52,8 +52,9 @@ export function ArtistSlider() {
               transition={{ duration: 0.2 }}
               className="flex flex-col items-center gap-1"
             >
-              <h3 className="text-2xl md:text-3xl font-bold neon-text-subtle text-artist-primary transition-colors duration-500">
+              <h3 className="text-2xl md:text-3xl font-bold neon-text-subtle text-artist-primary transition-colors duration-500 flex items-center justify-center gap-2">
                 {currentArtist?.name}
+                <BadgeCheck className="w-5 h-5 md:w-6 md:h-6 text-blue-500 fill-blue-500" />
               </h3>
               {currentArtist && (
                 <div className="flex items-center gap-2">
@@ -188,13 +189,13 @@ export function ArtistSlider() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Dots Indicator - Single Line */}
-        <div className="flex justify-center gap-0.5 mt-3 flex-nowrap overflow-hidden">
+        {/* Dots Indicator - Single Line with better spacing */}
+        <div className="flex justify-center gap-1 mt-6 mb-4 flex-nowrap overflow-hidden">
           {artists.map((artist, index) => (
             <button
               key={index}
               onClick={() => scrollToArtist(index)}
-              className="min-w-[24px] min-h-[24px] flex items-center justify-center touch-manipulation"
+              className="min-w-[20px] min-h-[20px] flex items-center justify-center touch-manipulation"
             >
               <span
                 className="block transition-all duration-500 rounded-full"

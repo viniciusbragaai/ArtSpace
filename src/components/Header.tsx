@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, User, X, Menu } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LanguageSelector } from '@/components/LanguageSelector';
@@ -8,14 +9,44 @@ import { ExchangeRateDisplay } from '@/components/ExchangeRateDisplay';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useArtistTheme } from '@/contexts/ArtistThemeContext';
 import artspaceLogo from '@/assets/artspace-logo.png';
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const { totalItems, setIsCartOpen } = useCart();
   const { isAuthenticated, setIsAuthModalOpen } = useAuth();
+  const { artists, setCurrentArtist } = useArtistTheme();
+
+  // Filter artists based on search query
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    return artists.filter(artist => 
+      artist.name.toLowerCase().includes(query) ||
+      artist.handle.toLowerCase().includes(query) ||
+      artist.specialty.toLowerCase().includes(query)
+    );
+  }, [searchQuery, artists]);
+
+  const handleSearchSelect = (artist: typeof artists[0]) => {
+    setCurrentArtist(artist);
+    setSearchQuery('');
+    setShowSearchResults(false);
+    navigate('/');
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchResults.length > 0) {
+      handleSearchSelect(searchResults[0]);
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-strong safe-area-top">
@@ -47,16 +78,54 @@ export function Header() {
             />
           </motion.a>
 
-          {/* Search Bar - Desktop - Always Expanded */}
-          <div className="hidden lg:flex flex-1 mx-8">
-            <div className="relative w-full">
+          {/* Search Bar - Desktop - Always Expanded with autocomplete */}
+          <div className="hidden lg:flex flex-1 mx-8 relative">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
               <Input
                 type="search"
                 placeholder={t('header.search')}
                 className="w-full bg-muted/50 border-artist-primary/30 focus:border-artist-primary rounded-full pl-10 pr-4 h-11"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSearchResults(true);
+                }}
+                onFocus={() => setShowSearchResults(true)}
+                onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            </div>
+            </form>
+            
+            {/* Search Results Dropdown */}
+            <AnimatePresence>
+              {showSearchResults && searchResults.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50"
+                >
+                  {searchResults.map((artist) => (
+                    <button
+                      key={artist.id}
+                      onClick={() => handleSearchSelect(artist)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors text-left"
+                    >
+                      <div
+                        className="w-10 h-10 rounded-full overflow-hidden"
+                        style={{ backgroundColor: artist.neonColor }}
+                      >
+                        <img src={artist.photo} alt={artist.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{artist.name}</p>
+                        <p className="text-xs text-muted-foreground">{artist.specialty}</p>
+                      </div>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Right Navigation - Desktop */}

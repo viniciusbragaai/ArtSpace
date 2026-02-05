@@ -120,17 +120,20 @@
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     overflow-x: hidden;
-    overflow-y: auto;
-    min-height: 100vh;
+    overflow-y: scroll !important;
+    min-height: 100%;
+    height: auto;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Space Grotesk', sans-serif;
     overflow-x: hidden;
-    overflow-y: auto;
-    min-height: 100vh;
-    overscroll-behavior-y: contain;
+    overflow-y: scroll !important;
+    min-height: 100%;
+    height: auto;
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Mono font for numbers */

@@ -20,7 +20,8 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="min-h-screen bg-background transition-colors duration-700 page-transition"
+            className="min-h-screen bg-background transition-colors duration-700 page-transition overflow-y-auto"
+            style={{ overflowY: 'auto', height: 'auto' }}
           >
             <Header />
             <main className="pb-20 md:pb-0">
