@@ -185,18 +185,30 @@ const products: Product[] = [
 
 type ProductVersion = 'original' | 'print' | 'custom' | 'mug' | 'pen';
 
-export function ProductGrid() {
+export type FilterCategory = 'all' | 'artistas' | 'original' | 'prints' | 'canecas' | 'canetas';
+
+interface ProductGridProps {
+  filterCategory?: FilterCategory;
+}
+
+export function ProductGrid({ filterCategory = 'all' }: ProductGridProps) {
   const { currentArtist, neonColor } = useArtistTheme();
   const { t } = useLanguage();
 
-  // Filter products based on selected artist
+  // Filter products based on selected artist and category
   const filteredProducts = useMemo(() => {
-    if (!currentArtist) {
-      // Show featured products when no artist selected
-      return products.filter((p) => p.isFeatured);
+    let filtered = products;
+    
+    // First filter by artist if selected
+    if (currentArtist) {
+      filtered = filtered.filter((p) => p.artistId === currentArtist.id);
+    } else if (filterCategory === 'all') {
+      // Show featured products when no artist selected and no filter
+      filtered = filtered.filter((p) => p.isFeatured);
     }
-    return products.filter((p) => p.artistId === currentArtist.id);
-  }, [currentArtist]);
+    
+    return filtered;
+  }, [currentArtist, filterCategory]);
 
   const isShowingFeatured = !currentArtist || filteredProducts.length === 0;
   const hasNoProducts = currentArtist && filteredProducts.length === 0;

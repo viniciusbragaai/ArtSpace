@@ -209,8 +209,8 @@ export function HeroSlider() {
         <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-foreground/70 group-hover:text-artist-primary transition-colors" />
       </motion.button>
 
-      {/* Pagination Dots */}
-      <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+      {/* Pagination Dots - with better spacing from buttons */}
+      <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 mt-4">
         {heroSlides.map((_, index) => (
           <button
             key={index}

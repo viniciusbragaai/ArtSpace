@@ -12,9 +12,9 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { path: '/', icon: <Home className="w-5 h-5" />, labelKey: 'nav.home', defaultLabel: 'Home' },
-  { path: '/explore', icon: <Compass className="w-5 h-5" />, labelKey: 'nav.explore', defaultLabel: 'Explorar' },
-  { path: '/cart', icon: <ShoppingCart className="w-5 h-5" />, labelKey: 'nav.cart', defaultLabel: 'Carrinho' },
-  { path: '/profile', icon: <User className="w-5 h-5" />, labelKey: 'nav.profile', defaultLabel: 'Perfil' },
+  { path: '/explorar', icon: <Compass className="w-5 h-5" />, labelKey: 'nav.explore', defaultLabel: 'Explorar' },
+  { path: '/carrinho', icon: <ShoppingCart className="w-5 h-5" />, labelKey: 'nav.cart', defaultLabel: 'Carrinho' },
+  { path: '/perfil', icon: <User className="w-5 h-5" />, labelKey: 'nav.profile', defaultLabel: 'Perfil' },
 ];
 
 export function BottomNavigation() {
