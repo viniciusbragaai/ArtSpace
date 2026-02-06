@@ -120,20 +120,29 @@
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     overflow-x: hidden;
-    overflow-y: scroll !important;
-    min-height: 100%;
+    overflow-y: auto;
+    min-height: 100dvh;
     height: auto;
+    touch-action: pan-x pan-y;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Space Grotesk', sans-serif;
     overflow-x: hidden;
-    overflow-y: scroll !important;
-    min-height: 100%;
+    overflow-y: auto;
+    min-height: 100dvh;
     height: auto;
     overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    position: relative;
+  }
+
+  #root {
+    min-height: 100dvh;
+    overflow-y: auto;
+    touch-action: pan-x pan-y;
   }
 
   /* Mono font for numbers */
