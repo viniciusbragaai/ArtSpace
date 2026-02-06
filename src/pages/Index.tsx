@@ -16,13 +16,7 @@ const Index = () => {
     <LanguageProvider>
       <CurrencyProvider>
         <ArtistThemeProvider>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="min-h-screen bg-background transition-colors duration-700 page-transition overflow-y-auto"
-            style={{ overflowY: 'auto', height: 'auto' }}
-          >
+          <div className="min-h-[100dvh] bg-background transition-colors duration-700">
             <Header />
             <main className="pb-20 md:pb-0">
               <div className="max-w-6xl mx-auto px-4">
@@ -35,7 +29,7 @@ const Index = () => {
             </main>
             <Footer />
             <BottomNavigation />
-          </motion.div>
+          </div>
         </ArtistThemeProvider>
       </CurrencyProvider>
     </LanguageProvider>
