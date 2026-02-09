@@ -18,15 +18,19 @@ export function BottomSheet({ isOpen, onClose, children, title, className }: Bot
     }
   };
 
-  // Prevent body scroll when sheet is open
+  // Clean up any scroll locks on close/unmount — NEVER set overflow:hidden on body
   React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    if (!isOpen) {
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isOpen]);
 

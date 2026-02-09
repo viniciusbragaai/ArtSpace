@@ -4,7 +4,23 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-const Dialog = DialogPrimitive.Root;
+const Dialog = ({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) => (
+  <DialogPrimitive.Root
+    {...props}
+    onOpenChange={(open) => {
+      props.onOpenChange?.(open);
+      // Force restore scroll after Radix removes it
+      if (!open) {
+        requestAnimationFrame(() => {
+          document.body.style.overflow = '';
+          document.body.style.pointerEvents = '';
+          document.body.style.touchAction = '';
+          document.documentElement.style.overflow = '';
+        });
+      }
+    }}
+  />
+);
 
 const DialogTrigger = DialogPrimitive.Trigger;
 

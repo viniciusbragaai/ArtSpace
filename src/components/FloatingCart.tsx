@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,23 @@ export function FloatingCart() {
   const { convertToBRL } = useCurrency();
   const { isAuthenticated, setIsAuthModalOpen } = useAuth();
   const navigate = useNavigate();
+
+  // Ensure scroll is NEVER locked by this component
+  useEffect(() => {
+    // Force restore scroll on close and on unmount
+    if (!isCartOpen) {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isCartOpen]);
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
