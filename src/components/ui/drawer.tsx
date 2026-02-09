@@ -4,7 +4,21 @@ import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "@/lib/utils";
 
 const Drawer = ({ shouldScaleBackground = true, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+  <DrawerPrimitive.Root
+    shouldScaleBackground={shouldScaleBackground}
+    {...props}
+    onOpenChange={(open) => {
+      props.onOpenChange?.(open);
+      if (!open) {
+        requestAnimationFrame(() => {
+          document.body.style.overflow = '';
+          document.body.style.pointerEvents = '';
+          document.body.style.touchAction = '';
+          document.documentElement.style.overflow = '';
+        });
+      }
+    }}
+  />
 );
 Drawer.displayName = "Drawer";
 
